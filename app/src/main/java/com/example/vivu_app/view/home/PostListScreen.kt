@@ -26,7 +26,7 @@ import com.example.vivu_app.controller.PostViewModel
 
 @Composable
 fun PostListScreen(navController: NavController, viewModel: PostViewModel) {
-    val posts by viewModel.posts.collectAsState() // ✅ Lấy danh sách bài viết từ ViewModel
+    val posts by viewModel.posts.collectAsState() // Lấy danh sách bài viết từ ViewModel
 
 
     LazyColumn {
@@ -53,7 +53,7 @@ fun PostItem(post: Post,title: String, imageRes: Int, rating: Double,duration: S
         colors = CardDefaults.cardColors(containerColor = Color(0xFFE4DEE1)) // Màu nền nhẹ
     ) {
         Row(modifier = Modifier.padding(10.dp)) {
-            // 📌 Chồng ảnh & rating lên nhau
+            // Chồng ảnh & rating lên nhau
             Box(
                 modifier = Modifier
                     .width(155.dp)
@@ -69,17 +69,17 @@ fun PostItem(post: Post,title: String, imageRes: Int, rating: Double,duration: S
 
                 Box(
                     modifier = Modifier
-                        .align(Alignment.TopStart) // 📌 Đưa rating lên góc trên
+                        .align(Alignment.TopStart) // Đưa rating lên góc trên
                         .padding(6.dp)
                         .width(70.dp)
                         .height(20.dp)
-                        .background(Color(0xFFF1E8D9), RoundedCornerShape(50.dp)), // 🎨 Nền bo góc
-                    contentAlignment = Alignment.Center // ✅ Căn giữa cả chiều ngang & dọc
+                        .background(Color(0xFFF1E8D9), RoundedCornerShape(50.dp)), // Nền bo góc
+                    contentAlignment = Alignment.Center // Căn giữa cả chiều ngang & dọc
                 ) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically, // ✅ Căn giữa theo chiều dọc
-                        horizontalArrangement = Arrangement.Center, // ✅ Căn giữa theo chiều ngang
-                        modifier = Modifier.fillMaxSize() // 🔹 Đảm bảo Row chiếm toàn bộ Box
+                        verticalAlignment = Alignment.CenterVertically, // Căn giữa theo chiều dọc
+                        horizontalArrangement = Arrangement.Center, // Căn giữa theo chiều ngang
+                        modifier = Modifier.fillMaxSize() // Đảm bảo Row chiếm toàn bộ Box
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_star), //  Icon sao
@@ -98,7 +98,7 @@ fun PostItem(post: Post,title: String, imageRes: Int, rating: Double,duration: S
                 }
             }
 
-            Spacer(modifier = Modifier.width(5.dp)) // 🔹 Khoảng cách ảnh & nội dung
+            Spacer(modifier = Modifier.width(5.dp)) //  Khoảng cách ảnh & nội dung
 
             Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
 
@@ -140,7 +140,7 @@ fun PostItem(post: Post,title: String, imageRes: Int, rating: Double,duration: S
 
                 Spacer(modifier = Modifier.height(2.dp))
 
-                // 🗓️ Ngày khởi hành
+                // 🗓 Ngày khởi hành
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_calendar), // Icon lịch
@@ -157,7 +157,7 @@ fun PostItem(post: Post,title: String, imageRes: Int, rating: Double,duration: S
 
                 Spacer(modifier = Modifier.height(2.dp))
 
-                // 🚍 Số chỗ còn nhận
+                //  Số chỗ còn nhận
                 Row(verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
@@ -174,7 +174,7 @@ fun PostItem(post: Post,title: String, imageRes: Int, rating: Double,duration: S
                 }
             }
 
-            // ❤️ Nút yêu thích
+            //  Nút yêu thích
             Icon(
                 painter = painterResource(id = R.drawable.favorite_icon), // Icon trái tim
                 contentDescription = "Favorite",
