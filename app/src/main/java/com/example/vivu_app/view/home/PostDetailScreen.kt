@@ -21,7 +21,7 @@ fun PostDetailScreen(
     postViewModel: PostViewModel
 ){
     val postTitle = backStackEntry.arguments?.getString("postTitle") ?: ""
-    val post = postViewModel.getPostByTitle(postTitle) // ✅ Lấy bài viết từ ViewModel
+    val post = postViewModel.getPostByTitle(postTitle) // Lấy bài viết từ ViewModel
 
     if (post != null) {
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
