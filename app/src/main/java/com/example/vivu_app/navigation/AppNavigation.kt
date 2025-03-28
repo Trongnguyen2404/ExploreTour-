@@ -48,33 +48,33 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun AppNavigation(navController: NavHostController) {
 
-    // ✅ Khởi tạo ViewModel
-    val postViewModel: PostViewModel = viewModel() // ✅ Khởi tạo ViewModel
-    val posts by postViewModel.posts.collectAsState(initial = emptyList()) // ✅ Lấy danh sách bài viết từ ViewModel
+    // Khởi tạo ViewModel
+    val postViewModel: PostViewModel = viewModel() // Khởi tạo ViewModel
+    val posts by postViewModel.posts.collectAsState(initial = emptyList()) // Lấy danh sách bài viết từ ViewModel
 
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // 🌥️ Đám mây (luôn nằm dưới)
+        // 🌥Đám mây (luôn nằm dưới)
         CloudAnimationScreen(modifier = Modifier.fillMaxSize().zIndex(0f))
 
-        // 🏠 Điều hướng màn hình
+        // Điều hướng màn hình
         NavHost(
             navController = navController,
             startDestination = "home"
         )
         {
             composable(route = "home") {
-                HomeScreen(navController, postViewModel) // ✅ Truyền ViewModel vào HomeScreen
+                HomeScreen(navController, postViewModel) // Truyền ViewModel vào HomeScreen
             }
             composable(route = "postList") {
-                PostListScreen(navController, postViewModel) // ✅ Truyền ViewModel vào PostListScreen
+                PostListScreen(navController, postViewModel) // Truyền ViewModel vào PostListScreen
             }
 
             composable("home") {
                 Box(modifier = Modifier.fillMaxSize()) {
                     HomeScreen(navController , postViewModel)
-//                    CloudAnimationScreen(modifier = Modifier.zIndex(0f)) // ✅ Đặt zIndex cao hơn
+//                    CloudAnimationScreen(modifier = Modifier.zIndex(0f)) // Đặt zIndex cao hơn
 
                 }
             }
@@ -96,21 +96,21 @@ fun AppNavigation(navController: NavHostController) {
             }
 
 
-            // 🆕 Màn hình danh sách bài viết
+            // Màn hình danh sách bài viết
             composable("postList") {
-                PostListScreen(navController, postViewModel) // ✅ Đã truyền danh sách `posts`
+                PostListScreen(navController, postViewModel) // Đã truyền danh sách `posts`
             }
 
-            // 🆕 Màn hình chi tiết bài viết
+            // Màn hình chi tiết bài viết
             composable(
                 "postDetail/{postTitle}",
                 arguments = listOf(navArgument("postTitle") { type = NavType.StringType })
             ) { backStackEntry ->
-                PostDetailScreen(navController, backStackEntry, postViewModel) // ✅ Đúng, truyền ViewModel
+                PostDetailScreen(navController, backStackEntry, postViewModel) // Đúng, truyền ViewModel
             }
 
         }
-        // 🔍 Header nổi trên mây
+        // Header nổi trên mây
         TopHeader(modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 16.dp)
