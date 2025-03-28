@@ -37,11 +37,11 @@ fun BottomNavigationBar(navController: NavController) {
 
     Card(
         modifier = Modifier
-            .width(440.dp)  // ✅ Giữ nguyên chiều rộng Taskbar
-            .height(65.dp)  // ✅ Giữ nguyên chiều cao Taskbar
-            .clip(RoundedCornerShape(50.dp)), // ✅ Bo tròn góc
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF1E8D9)), // ✅ Màu nền be
-        elevation = CardDefaults.cardElevation(6.dp) // ✅ Bóng đổ nhẹ
+            .width(440.dp)  // Giữ nguyên chiều rộng Taskbar
+            .height(65.dp)  // Giữ nguyên chiều cao Taskbar
+            .clip(RoundedCornerShape(50.dp)), // Bo tròn góc
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF1E8D9)), //  Màu nền be
+        elevation = CardDefaults.cardElevation(6.dp) // Bóng đổ nhẹ
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -49,10 +49,10 @@ fun BottomNavigationBar(navController: NavController) {
         ) {
             NavigationBar(
                 modifier = Modifier
-                    .width(345.dp) // ✅ Giới hạn vùng chứa icon
+                    .width(345.dp) // Giới hạn vùng chứa icon
                     .height(50.dp),
-                containerColor = Color.Transparent, // ✅ Tránh chồng màu lên Taskbar
-                tonalElevation = 0.dp // ✅ Bỏ hiệu ứng nổi
+                containerColor = Color.Transparent, // Tránh chồng màu lên Taskbar
+                tonalElevation = 0.dp // Bỏ hiệu ứng nổi
             ) {
                 val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
@@ -61,14 +61,14 @@ fun BottomNavigationBar(navController: NavController) {
                         icon = {
                             Box(
                                 modifier = Modifier
-                                    .size(30.dp) // ✅ Giữ vùng tap hợp lý
-                                    .offset(y = 5.dp), // ✅ Hạ icon xuống một chút
+                                    .size(30.dp) // Giữ vùng tap hợp lý
+                                    .offset(y = 5.dp), // Hạ icon xuống một chút
                                 contentAlignment = Alignment.Center
                             ) {
                                 Image(
                                     painter = painterResource(id = item.icon),
                                     contentDescription = item.route,
-                                    modifier = Modifier.size(25.dp) // ✅ Icon to hơn một chút để cân đối
+                                    modifier = Modifier.size(25.dp) // Icon to hơn một chút để cân đối
                                 )
                             }
                         },
@@ -80,7 +80,7 @@ fun BottomNavigationBar(navController: NavController) {
                             indicatorColor = Color.Transparent
                         )
                     )
-                    // ✅ Thêm khoảng cách giữa các icon, nhưng không thêm sau icon cuối
+                    // Thêm khoảng cách giữa các icon, nhưng không thêm sau icon cuối
                     if (index < items.size - 1) {
                         Spacer(modifier = Modifier.width(1.dp))
                     }
