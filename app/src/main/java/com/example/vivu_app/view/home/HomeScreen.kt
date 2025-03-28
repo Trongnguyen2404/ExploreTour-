@@ -27,11 +27,11 @@ import com.example.vivu_app.ui.CloudAnimationScreen
 import com.example.vivu_app.view.posts.PostListScreen
 
 @Composable
-fun HomeScreen(navController: NavController, postViewModel: PostViewModel) { // ✅ Nhận postViewModel
+fun HomeScreen(navController: NavController, postViewModel: PostViewModel) { // Nhận postViewModel
     val postViewModel: PostViewModel = viewModel()
-    var selectedCategory by remember { mutableStateOf("tour") } // 🔹 Mặc định chọn "TOUR"
+    var selectedCategory by remember { mutableStateOf("tour") } // Mặc định chọn "TOUR"
 
-    // ✅ Khi mở HomeScreen, tự động load danh sách "TOUR"
+    // Khi mở HomeScreen, tự động load danh sách "TOUR"
     LaunchedEffect(Unit) {
         postViewModel.setCategory("tour")
     }
@@ -43,7 +43,7 @@ fun HomeScreen(navController: NavController, postViewModel: PostViewModel) { // 
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // 🌥️ Màn hình mây (luôn nằm dưới)
+            //  Màn hình mây (luôn nằm dưới)
             CloudAnimationScreen(
                 modifier = Modifier
                     .offset(y = (-25).dp)
@@ -52,7 +52,7 @@ fun HomeScreen(navController: NavController, postViewModel: PostViewModel) { // 
             )
 
 
-            // 🚀 Nút "TOUR" & "LOCATION" nổi trên mây
+            // Nút "TOUR" & "LOCATION" nổi trên mây
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -84,7 +84,7 @@ fun HomeScreen(navController: NavController, postViewModel: PostViewModel) { // 
                 }
             }
 
-            // 📝 Danh sách bài viết ở dưới nút
+            // Danh sách bài viết ở dưới nút
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -100,19 +100,19 @@ fun HomeScreen(navController: NavController, postViewModel: PostViewModel) { // 
 fun CustomCategoryButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .width(200.dp) // 📏 Độ rộng của viền ngoài
-            .height(30.dp) // 📏 Độ cao của viền ngoài
-            .padding(horizontal = 10.dp) // 🔹 Cách viền điện thoại 2 bên
-            .then(if (isSelected) Modifier.shadow(10.dp, shape = RoundedCornerShape(40.dp)) else Modifier) // ✨ Chỉ đổ bóng khi được chọn
-            .border(2.dp, Color.Black, RoundedCornerShape(40.dp)) // 🔹 Viền đen
-            .clip(RoundedCornerShape(40.dp)) // 🟢 Bo góc 40dp
-            .background(if (isSelected) Color(0xFFA1C9F1) else Color.Transparent) // 🔹 Xanh khi chọn, trong suốt khi không chọn
+            .width(200.dp) // Độ rộng của viền ngoài
+            .height(30.dp) // Độ cao của viền ngoài
+            .padding(horizontal = 10.dp) // Cách viền điện thoại 2 bên
+            .then(if (isSelected) Modifier.shadow(10.dp, shape = RoundedCornerShape(40.dp)) else Modifier) // Chỉ đổ bóng khi được chọn
+            .border(2.dp, Color.Black, RoundedCornerShape(40.dp)) // Viền đen
+            .clip(RoundedCornerShape(40.dp)) // Bo góc 40dp
+            .background(if (isSelected) Color(0xFFA1C9F1) else Color.Transparent) // Xanh khi chọn, trong suốt khi không chọn
             .clickable { onClick() },
-        contentAlignment = Alignment.Center // 🔹 Đảm bảo text nằm giữa cả chiều ngang & dọc
+        contentAlignment = Alignment.Center // Đảm bảo text nằm giữa cả chiều ngang & dọc
     ) {
         Text(
             text = text,
-            fontSize = 16.sp, // 🔹 Cỡ chữ 16
+            fontSize = 16.sp, // Cỡ chữ 16
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             textAlign = TextAlign.Center
