@@ -52,9 +52,9 @@ fun CloudAnimationScreen(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(600.dp) // 🔥 Chiều cao lớn hơn để mây không bị cắt
+            .height(600.dp) // Chiều cao lớn hơn để mây không bị cắt
     ) {
-        // 🌥️ Tầng mây 1 (TO HƠN & LÊN CAO)
+        // Tầng mây 1
         AnimatedVisibility(visible = showCloud1) {
             Image(
                 painter = painterResource(id = R.drawable.cloud_layer_3),
@@ -66,7 +66,7 @@ fun CloudAnimationScreen(modifier: Modifier = Modifier) {
                     .offset(y = cloud3Offset)
             )
         }
-        // ☁️ Tầng mây 2 (TO HƠN & LÊN CAO)
+        // Tầng mây 2
         AnimatedVisibility(visible = showCloud2) {
             Image(
                 painter = painterResource(id = R.drawable.cloud_layer_2),
@@ -78,7 +78,7 @@ fun CloudAnimationScreen(modifier: Modifier = Modifier) {
                     .offset(y = cloud2Offset, x = -15.dp)
             )
         }
-        // 🌩️ Tầng mây 3 (TO HƠN & LÊN CAO)
+        // Tầng mây 3
         AnimatedVisibility(visible = showCloud3) {
             Image(
                 painter = painterResource(id = R.drawable.cloud_layer_1),

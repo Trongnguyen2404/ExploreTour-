@@ -1,59 +1,81 @@
 package com.example.vivu_app.view.posts
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.example.vivu_app.model.Post
-import androidx.compose.ui.res.painterResource
-import androidx.compose.foundation.lazy.items
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.vivu_app.R
-import com.example.vivu_app.controller.PostViewModel
+import com.example.vivu_app.controller.PostController
+import com.example.vivu_app.model.Post
+import androidx.compose.ui.*
 
 
 @Composable
+<<<<<<< HEAD
 fun PostListScreen(navController: NavController, viewModel: PostViewModel) {
     val posts by viewModel.posts.collectAsState() // Lấy danh sách bài viết từ ViewModel
+=======
+fun PostListScreen(navController: NavController, postController: PostController) {
+    val posts by postController.posts.collectAsState(initial = emptyList()) // Lấy dữ liệu mới
+>>>>>>> 33a34e0 (Update new code)
 
+    Log.d("PostListScreen", "Received posts: $posts") // Kiểm tra dữ liệu
 
     LazyColumn {
-            items(posts) { post ->
-                PostItem(post,post.title, post.imageRes, post.rating,post.duration,post.departureDate,post.remainingSeats ,navController)
-            }
+        items(posts) { post ->
+            PostItem(
+                post = post,
+                navController = navController,
+                postController = postController,
+                onFavoriteClick = {
+                    postController.toggleFavorite(post.id)
+                }
+            )
+        }
     }
 }
 
 
-
-
-
 @Composable
-fun PostItem(post: Post,title: String, imageRes: Int, rating: Double,duration: String,departureDate: String,remainingSeats: Int, navController: NavController) {
+fun PostItem(
+    post: Post, // Sửa type từ Int thành Post
+    navController: NavController,
+    postController: PostController,
+    onFavoriteClick: () -> Unit
+) {
+    // Lấy danh sách bài viết yêu thích từ ViewModel
+    val favoritePosts = postController.favoritePosts.collectAsState(initial = emptyList<Post>()).value
+
+
+    // Kiểm tra nếu bài viết có trong danh sách yêu thích (isFavorite = true)
+    val isFavorited = favoritePosts.any { it.id == post.id }
     Card(
         modifier = Modifier
             .width(450.dp)
             .height(170.dp)
-            .padding(horizontal = 16.dp, vertical = 8.dp) // Căn giữa và cách viền điện thoại
-            .shadow(4.dp, shape = RoundedCornerShape(40.dp)) // Đổ bóng nhẹ
-            .clickable { navController.navigate("postDetail/$title") },
-        shape = RoundedCornerShape(40.dp), // Bo góc mềm mại
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE4DEE1)) // Màu nền nhẹ
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable { navController.navigate("postDetail/${post.title}") },
+        shape = RoundedCornerShape(40.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE4DEE1))
     ) {
         Row(modifier = Modifier.padding(10.dp)) {
+<<<<<<< HEAD
             // Chồng ảnh & rating lên nhau
+=======
+>>>>>>> 33a34e0 (Update new code)
             Box(
                 modifier = Modifier
                     .width(155.dp)
@@ -66,9 +88,10 @@ fun PostItem(post: Post,title: String, imageRes: Int, rating: Double,duration: S
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.matchParentSize()
                 )
-
+                // Rating
                 Box(
                     modifier = Modifier
+<<<<<<< HEAD
                         .align(Alignment.TopStart) // Đưa rating lên góc trên
                         .padding(6.dp)
                         .width(70.dp)
@@ -80,29 +103,48 @@ fun PostItem(post: Post,title: String, imageRes: Int, rating: Double,duration: S
                         verticalAlignment = Alignment.CenterVertically, // Căn giữa theo chiều dọc
                         horizontalArrangement = Arrangement.Center, // Căn giữa theo chiều ngang
                         modifier = Modifier.fillMaxSize() // Đảm bảo Row chiếm toàn bộ Box
+=======
+                        .align(Alignment.TopStart)
+                        .padding(6.dp)
+                        .width(70.dp)
+                        .height(20.dp)
+                        .background(Color(0xFFF1E8D9), RoundedCornerShape(50.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+>>>>>>> 33a34e0 (Update new code)
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_star), //  Icon sao
+                            painter = painterResource(id = R.drawable.ic_star),
                             contentDescription = null,
                             tint = Color.Unspecified,
                             modifier = Modifier.size(20.dp)
                         )
-                    Spacer(modifier = Modifier.width(3.dp))
+                        Spacer(modifier = Modifier.width(3.dp))
                         Text(
                             text = post.rating.toString(),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Color.Black,
+                            color = Color.Black
                         )
                     }
                 }
             }
 
+<<<<<<< HEAD
             Spacer(modifier = Modifier.width(5.dp)) //  Khoảng cách ảnh & nội dung
 
             Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
+=======
+            Spacer(modifier = Modifier.width(5.dp))
+>>>>>>> 33a34e0 (Update new code)
 
+            Column(modifier = Modifier.weight(1f)) {
                 Spacer(modifier = Modifier.height(25.dp))
+<<<<<<< HEAD
 
                 // tên địa điểm
                 Row(verticalAlignment = Alignment.CenterVertically
@@ -175,15 +217,46 @@ fun PostItem(post: Post,title: String, imageRes: Int, rating: Double,duration: S
             }
 
             //  Nút yêu thích
+=======
+                InfoRow(icon = R.drawable.ic_location, text = post.title)
+                InfoRow(icon = R.drawable.ic_time, text = "Lịch trình: ${post.duration}")
+                InfoRow(icon = R.drawable.ic_calendar, text = "Khởi hành: ${post.departureDate}")
+                InfoRow(icon = R.drawable.ic_seat, text = "Số chỗ còn nhận: ${post.remainingSeats}")
+            }
+
+            // Nút yêu thích
+>>>>>>> 33a34e0 (Update new code)
             Icon(
-                painter = painterResource(id = R.drawable.favorite_icon), // Icon trái tim
+                painter = painterResource(
+                    id = if (isFavorited) R.drawable.favorite_icon1 else R.drawable.favorite_icon
+                ),
                 contentDescription = "Favorite",
-                tint = Color.Black,
+                tint = if (isFavorited) Color.Red else Color.Gray,
                 modifier = Modifier
                     .size(30.dp)
                     .padding(end = 8.dp)
-                    .clickable { /* TODO: Xử lý yêu thích */ }
+                    .clickable {
+                        onFavoriteClick()
+                    }
             )
         }
+    }
+}
+
+@Composable
+fun InfoRow(icon: Int, text: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            painter = painterResource(id = icon),
+            contentDescription = null,
+            modifier = Modifier.size(15.dp)
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(
+            text = text,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color.DarkGray
+        )
     }
 }

@@ -11,14 +11,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
-import com.example.vivu_app.controller.PostViewModel
+import com.example.vivu_app.controller.PostController
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PostDetailScreen(
     navController: NavController,
     backStackEntry: NavBackStackEntry,
-    postViewModel: PostViewModel
+    postViewModel: PostController
 ){
     val postTitle = backStackEntry.arguments?.getString("postTitle") ?: ""
     val post = postViewModel.getPostByTitle(postTitle) // Lấy bài viết từ ViewModel

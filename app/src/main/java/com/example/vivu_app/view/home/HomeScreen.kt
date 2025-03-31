@@ -1,11 +1,10 @@
 package com.example.vivu_app.view.home
 
-import androidx.compose.foundation.Image
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,22 +17,40 @@ import androidx.navigation.NavController
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.vivu_app.controller.PostViewModel
+import com.example.vivu_app.controller.PostController
+import com.example.vivu_app.controller.PostControllerFactory
 import com.example.vivu_app.navigation.BottomNavigationBar
 import com.example.vivu_app.ui.CloudAnimationScreen
 import com.example.vivu_app.view.posts.PostListScreen
+import com.example.vivu_app.preferences.PreferencesManager
+import androidx.navigation.NavHostController
 
+
+
+
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
+<<<<<<< HEAD
 fun HomeScreen(navController: NavController, postViewModel: PostViewModel) { // Nhận postViewModel
     val postViewModel: PostViewModel = viewModel()
+=======
+fun HomeScreen(navController: NavHostController,postController: PostController) {
+    val context = LocalContext.current
+    val preferencesManager = remember { PreferencesManager(context) }
+    val postController: PostController = viewModel(
+        factory = PostControllerFactory(preferencesManager)
+    )
+//    val postController: PostController = viewModel()
+>>>>>>> 33a34e0 (Update new code)
     var selectedCategory by remember { mutableStateOf("tour") } // Mặc định chọn "TOUR"
 
     // Khi mở HomeScreen, tự động load danh sách "TOUR"
     LaunchedEffect(Unit) {
-        postViewModel.setCategory("tour")
+        postController.setCategory("tour")
     }
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
@@ -43,20 +60,27 @@ fun HomeScreen(navController: NavController, postViewModel: PostViewModel) { // 
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+<<<<<<< HEAD
             //  Màn hình mây (luôn nằm dưới)
+=======
+            // Màn hình mây (luôn nằm dưới)
+>>>>>>> 33a34e0 (Update new code)
             CloudAnimationScreen(
                 modifier = Modifier
-                    .offset(y = (-25).dp)
+                    .offset(y = (-50).dp)
                     .fillMaxSize()
                     .zIndex(0f) // Đảm bảo mây ở dưới
             )
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 33a34e0 (Update new code)
             // Nút "TOUR" & "LOCATION" nổi trên mây
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 130.dp) // Điều chỉnh vị trí theo nhu cầu
+                    .padding(top = 105.dp) // Điều chỉnh vị trí theo nhu cầu
                     .zIndex(1f), // Đưa lên trên mây
                 contentAlignment = Alignment.TopCenter
             ) {
@@ -70,7 +94,7 @@ fun HomeScreen(navController: NavController, postViewModel: PostViewModel) { // 
                 isSelected = selectedCategory == "tour",
                 onClick = {
                     selectedCategory = "tour"
-                    postViewModel.setCategory("tour")
+                    postController.setCategory("tour")
                 }
                 )
                 CustomCategoryButton(
@@ -78,7 +102,7 @@ fun HomeScreen(navController: NavController, postViewModel: PostViewModel) { // 
                     isSelected = selectedCategory == "location",
                     onClick = {
                         selectedCategory = "location"
-                        postViewModel.setCategory("location")
+                        postController.setCategory("location")
                     }
                 )
                 }
@@ -88,9 +112,10 @@ fun HomeScreen(navController: NavController, postViewModel: PostViewModel) { // 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 170.dp) // Đẩy danh sách xuống dưới nút
+                    .padding(top = 150.dp) // Đẩy danh sách xuống dưới nút
             ) {
-                PostListScreen(navController, postViewModel)
+                PostListScreen(navController, postController)
+
             }
         }
     }
@@ -108,7 +133,11 @@ fun CustomCategoryButton(text: String, isSelected: Boolean, onClick: () -> Unit)
             .clip(RoundedCornerShape(40.dp)) // Bo góc 40dp
             .background(if (isSelected) Color(0xFFA1C9F1) else Color.Transparent) // Xanh khi chọn, trong suốt khi không chọn
             .clickable { onClick() },
+<<<<<<< HEAD
         contentAlignment = Alignment.Center // Đảm bảo text nằm giữa cả chiều ngang & dọc
+=======
+        contentAlignment = Alignment.Center //  text nằm giữa cả chiều ngang & dọc
+>>>>>>> 33a34e0 (Update new code)
     ) {
         Text(
             text = text,

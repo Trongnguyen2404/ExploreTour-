@@ -1,5 +1,6 @@
 package com.example.vivu_app.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -35,26 +36,34 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.example.vivu_app.controller.PostViewModel
+import com.example.vivu_app.controller.PostController
 import com.example.vivu_app.view.posts.PostDetailScreen
 import com.example.vivu_app.view.posts.PostListScreen
-import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 
 
 
-
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
+<<<<<<< HEAD
 fun AppNavigation(navController: NavHostController) {
 
     // Khởi tạo ViewModel
     val postViewModel: PostViewModel = viewModel() // Khởi tạo ViewModel
     val posts by postViewModel.posts.collectAsState(initial = emptyList()) // Lấy danh sách bài viết từ ViewModel
 
+=======
+fun AppNavigation(
+    navController: NavHostController,
+    postController: PostController // Thêm Controller
+) {
+>>>>>>> 33a34e0 (Update new code)
 
 
+    val posts by postController.posts.collectAsState(initial = emptyList())
     Box(modifier = Modifier.fillMaxSize()) {
+<<<<<<< HEAD
         // 🌥Đám mây (luôn nằm dưới)
         CloudAnimationScreen(modifier = Modifier.fillMaxSize().zIndex(0f))
 
@@ -102,23 +111,61 @@ fun AppNavigation(navController: NavHostController) {
             }
 
             // Màn hình chi tiết bài viết
+=======
+        CloudAnimationScreen(modifier = Modifier.fillMaxSize().zIndex(0f))
+
+        val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
+
+        NavHost(
+            navController = navController,
+            startDestination = "home"
+        ) {
+            composable("home") {
+                HomeScreen(navController, postController)}
+            // ✅ Truyền đúng ViewModel
+
+            composable("postList") {
+                PostListScreen(navController, postController)
+
+            }
+
+            composable("favorites") { FavoritesScreen(navController, postController) }
+
+            composable("chat") { ChatScreen(navController) }
+            composable("profile") { ProfileScreen(navController) }
+>>>>>>> 33a34e0 (Update new code)
             composable(
                 "postDetail/{postTitle}",
                 arguments = listOf(navArgument("postTitle") { type = NavType.StringType })
             ) { backStackEntry ->
+<<<<<<< HEAD
                 PostDetailScreen(navController, backStackEntry, postViewModel) // Đúng, truyền ViewModel
+=======
+                PostDetailScreen(navController, backStackEntry, postController)
+>>>>>>> 33a34e0 (Update new code)
             }
-
         }
+<<<<<<< HEAD
         // Header nổi trên mây
         TopHeader(modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 16.dp)
             .zIndex(2f)
         )
+=======
+>>>>>>> 33a34e0 (Update new code)
 
+        if (currentDestination != "favorites") {
+            TopHeader(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .zIndex(2f)
+            )
         }
     }
+}
+
 
 @Composable
 fun TopHeader(modifier: Modifier = Modifier) {
@@ -138,7 +185,7 @@ fun TopHeader(modifier: Modifier = Modifier) {
             contentDescription = "VIVU Logo",
             modifier = Modifier
                 .size(130.dp)  // Thử kích thước lớn hơn
-                .offset(y = (-20).dp), // Đẩy lên trên 20dp, sang trái 10dp
+                .offset(y = (-20).dp), // Đẩy lên trên 20dp
             )
 
         //  CỘT BÊN PHẢI: Chứa (Tên + Avatar) & (Thanh Tìm Kiếm)
@@ -152,7 +199,7 @@ fun TopHeader(modifier: Modifier = Modifier) {
                 Text(
                     text = "Tên của bạn",
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(end = 8.dp) // Khoảng cách giữa tên & avatar
+                    modifier = Modifier.padding(end = 8.dp).offset(y = 5.dp) // Khoảng cách giữa tên & avatar
                 )
 
                 Image(
@@ -182,7 +229,7 @@ fun SearchBar() {
             .fillMaxWidth()  //  Chiếm toàn bộ chiều rộng có thể
             .height(40.dp) //  Tăng chiều cao một chút
             .background(Color.White, shape = RoundedCornerShape(50))
-            .border(1.dp, Color.Black, shape = RoundedCornerShape(50)),
+            .border(2.dp, Color.Black, shape = RoundedCornerShape(50)),
         contentAlignment = Alignment.Center
     ) {
         BasicTextField(

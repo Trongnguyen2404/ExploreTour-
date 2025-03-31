@@ -9,5 +9,11 @@ data class Post(
     val imageUrl: String? = null, // Link ảnh nếu lấy từ Internet
     val duration: String = "", // Thời gian tour
     val departureDate: String = "", // Ngày khởi hành
+<<<<<<< HEAD
     val remainingSeats: Int = 0 // Số chỗ còn lại
 )
+=======
+    val remainingSeats: Int = 0 ,// Số chỗ còn lại
+    var isFavorite: Boolean  // Thêm trạng thái yêu thích
+)
+>>>>>>> 33a34e0 (Update new code)

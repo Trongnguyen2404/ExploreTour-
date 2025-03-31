@@ -73,5 +73,9 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.navigation:navigation-compose:2.X.X") // Trùng lặp
     implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+
+    implementation ("com.google.dagger:hilt-android:2.50")
+
 
 }
