@@ -34,10 +34,6 @@ import androidx.navigation.NavHostController
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-<<<<<<< HEAD
-fun HomeScreen(navController: NavController, postViewModel: PostViewModel) { // Nhận postViewModel
-    val postViewModel: PostViewModel = viewModel()
-=======
 fun HomeScreen(navController: NavHostController,postController: PostController) {
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
@@ -45,7 +41,7 @@ fun HomeScreen(navController: NavHostController,postController: PostController) 
         factory = PostControllerFactory(preferencesManager)
     )
 //    val postController: PostController = viewModel()
->>>>>>> 33a34e0 (Update new code)
+
     var selectedCategory by remember { mutableStateOf("tour") } // Mặc định chọn "TOUR"
 
     // Khi mở HomeScreen, tự động load danh sách "TOUR"
@@ -60,11 +56,7 @@ fun HomeScreen(navController: NavHostController,postController: PostController) 
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-<<<<<<< HEAD
-            //  Màn hình mây (luôn nằm dưới)
-=======
             // Màn hình mây (luôn nằm dưới)
->>>>>>> 33a34e0 (Update new code)
             CloudAnimationScreen(
                 modifier = Modifier
                     .offset(y = (-50).dp)
@@ -72,10 +64,7 @@ fun HomeScreen(navController: NavHostController,postController: PostController) 
                     .zIndex(0f) // Đảm bảo mây ở dưới
             )
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 33a34e0 (Update new code)
             // Nút "TOUR" & "LOCATION" nổi trên mây
             Box(
                 modifier = Modifier
@@ -133,11 +122,7 @@ fun CustomCategoryButton(text: String, isSelected: Boolean, onClick: () -> Unit)
             .clip(RoundedCornerShape(40.dp)) // Bo góc 40dp
             .background(if (isSelected) Color(0xFFA1C9F1) else Color.Transparent) // Xanh khi chọn, trong suốt khi không chọn
             .clickable { onClick() },
-<<<<<<< HEAD
-        contentAlignment = Alignment.Center // Đảm bảo text nằm giữa cả chiều ngang & dọc
-=======
         contentAlignment = Alignment.Center //  text nằm giữa cả chiều ngang & dọc
->>>>>>> 33a34e0 (Update new code)
     ) {
         Text(
             text = text,

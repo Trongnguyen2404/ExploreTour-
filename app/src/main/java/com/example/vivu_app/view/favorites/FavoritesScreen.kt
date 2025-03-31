@@ -17,7 +17,7 @@ import androidx.navigation.NavController
 import com.example.vivu_app.R
 import com.example.vivu_app.controller.PostController
 import com.example.vivu_app.navigation.BottomNavigationBar
-import com.example.vivu_app.view.posts.PostItem
+
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable

@@ -46,72 +46,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-<<<<<<< HEAD
-fun AppNavigation(navController: NavHostController) {
 
-    // Khởi tạo ViewModel
-    val postViewModel: PostViewModel = viewModel() // Khởi tạo ViewModel
-    val posts by postViewModel.posts.collectAsState(initial = emptyList()) // Lấy danh sách bài viết từ ViewModel
-
-=======
 fun AppNavigation(
     navController: NavHostController,
     postController: PostController // Thêm Controller
 ) {
->>>>>>> 33a34e0 (Update new code)
 
 
     val posts by postController.posts.collectAsState(initial = emptyList())
     Box(modifier = Modifier.fillMaxSize()) {
-<<<<<<< HEAD
-        // 🌥Đám mây (luôn nằm dưới)
-        CloudAnimationScreen(modifier = Modifier.fillMaxSize().zIndex(0f))
 
-        // Điều hướng màn hình
-        NavHost(
-            navController = navController,
-            startDestination = "home"
-        )
-        {
-            composable(route = "home") {
-                HomeScreen(navController, postViewModel) // Truyền ViewModel vào HomeScreen
-            }
-            composable(route = "postList") {
-                PostListScreen(navController, postViewModel) // Truyền ViewModel vào PostListScreen
-            }
-
-            composable("home") {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    HomeScreen(navController , postViewModel)
-//                    CloudAnimationScreen(modifier = Modifier.zIndex(0f)) // Đặt zIndex cao hơn
-
-                }
-            }
-            composable("favorites") {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    FavoritesScreen(navController)
-                }
-            }
-            composable("chat") {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    ChatScreen(navController)
-
-                }
-            }
-            composable("profile") {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    ProfileScreen(navController)
-                }
-            }
-
-
-            // Màn hình danh sách bài viết
-            composable("postList") {
-                PostListScreen(navController, postViewModel) // Đã truyền danh sách `posts`
-            }
-
-            // Màn hình chi tiết bài viết
-=======
         CloudAnimationScreen(modifier = Modifier.fillMaxSize().zIndex(0f))
 
         val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
@@ -133,27 +77,13 @@ fun AppNavigation(
 
             composable("chat") { ChatScreen(navController) }
             composable("profile") { ProfileScreen(navController) }
->>>>>>> 33a34e0 (Update new code)
             composable(
                 "postDetail/{postTitle}",
                 arguments = listOf(navArgument("postTitle") { type = NavType.StringType })
             ) { backStackEntry ->
-<<<<<<< HEAD
-                PostDetailScreen(navController, backStackEntry, postViewModel) // Đúng, truyền ViewModel
-=======
                 PostDetailScreen(navController, backStackEntry, postController)
->>>>>>> 33a34e0 (Update new code)
             }
         }
-<<<<<<< HEAD
-        // Header nổi trên mây
-        TopHeader(modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 16.dp)
-            .zIndex(2f)
-        )
-=======
->>>>>>> 33a34e0 (Update new code)
 
         if (currentDestination != "favorites") {
             TopHeader(
