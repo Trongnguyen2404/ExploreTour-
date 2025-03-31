@@ -32,22 +32,14 @@ import androidx.navigation.NavHostController
 
 
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun HomeScreen(navController: NavHostController,postController: PostController) {
-    val context = LocalContext.current
-    val preferencesManager = remember { PreferencesManager(context) }
-    val postController: PostController = viewModel(
-        factory = PostControllerFactory(preferencesManager)
-    )
-//    val postController: PostController = viewModel()
+fun HomeScreen(navController: NavHostController, postController: PostController) {
+    var selectedCategory by remember { mutableStateOf("tour") }
 
-    var selectedCategory by remember { mutableStateOf("tour") } // Mặc định chọn "TOUR"
-
-    // Khi mở HomeScreen, tự động load danh sách "TOUR"
     LaunchedEffect(Unit) {
         postController.setCategory("tour")
     }
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
@@ -56,55 +48,49 @@ fun HomeScreen(navController: NavHostController,postController: PostController) 
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Màn hình mây (luôn nằm dưới)
             CloudAnimationScreen(
                 modifier = Modifier
                     .offset(y = (-50).dp)
                     .fillMaxSize()
-                    .zIndex(0f) // Đảm bảo mây ở dưới
+                    .zIndex(0f)
             )
 
-
-            // Nút "TOUR" & "LOCATION" nổi trên mây
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 105.dp) // Điều chỉnh vị trí theo nhu cầu
-                    .zIndex(1f), // Đưa lên trên mây
+                    .padding(top = 105.dp)
+                    .zIndex(1f),
                 contentAlignment = Alignment.TopCenter
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(15.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(15.dp, alignment = Alignment.CenterHorizontally)
                 ) {
                     CustomCategoryButton(
                         text = "TOUR",
-                isSelected = selectedCategory == "tour",
-                onClick = {
-                    selectedCategory = "tour"
-                    postController.setCategory("tour")
-                }
-                )
-                CustomCategoryButton(
-                    text = "LOCATION",
-                    isSelected = selectedCategory == "location",
-                    onClick = {
-                        selectedCategory = "location"
-                        postController.setCategory("location")
-                    }
-                )
+                        isSelected = selectedCategory == "tour",
+                        onClick = {
+                            selectedCategory = "tour"
+                            postController.setCategory("tour")
+                        }
+                    )
+                    CustomCategoryButton(
+                        text = "LOCATION",
+                        isSelected = selectedCategory == "location",
+                        onClick = {
+                            selectedCategory = "location"
+                            postController.setCategory("location")
+                        }
+                    )
                 }
             }
 
-            // Danh sách bài viết ở dưới nút
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 150.dp) // Đẩy danh sách xuống dưới nút
+                    .padding(top = 150.dp)
             ) {
                 PostListScreen(navController, postController)
-
             }
         }
     }

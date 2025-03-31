@@ -43,42 +43,32 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 
 
 
-
-@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-
 fun AppNavigation(
     navController: NavHostController,
-    postController: PostController // Thêm Controller
+    postController: PostController
 ) {
-
-
     val posts by postController.posts.collectAsState(initial = emptyList())
+
     Box(modifier = Modifier.fillMaxSize()) {
 
         CloudAnimationScreen(modifier = Modifier.fillMaxSize().zIndex(0f))
 
         val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
 
-        NavHost(
-            navController = navController,
-            startDestination = "home"
-        ) {
-            composable("home") {
-                HomeScreen(navController, postController)}
-            // ✅ Truyền đúng ViewModel
+        NavHost(navController = navController, startDestination = "home") {
+            composable("home") { HomeScreen(navController, postController) }
 
-            composable("postList") {
-                PostListScreen(navController, postController)
-
-            }
+            composable("postList") { PostListScreen(navController, postController) }
 
             composable("favorites") { FavoritesScreen(navController, postController) }
 
             composable("chat") { ChatScreen(navController) }
+
             composable("profile") { ProfileScreen(navController) }
+
             composable(
-                "postDetail/{postTitle}",
+                route = "postDetail/{postTitle}",
                 arguments = listOf(navArgument("postTitle") { type = NavType.StringType })
             ) { backStackEntry ->
                 PostDetailScreen(navController, backStackEntry, postController)
@@ -96,40 +86,31 @@ fun AppNavigation(
     }
 }
 
-
 @Composable
 fun TopHeader(modifier: Modifier = Modifier) {
-    var searchText by remember { mutableStateOf("") }
-
     Row(
         modifier = modifier
-//            .fillMaxWidth()
-            .padding(top = 15.dp) // Căn lề cho đẹp
+            .padding(top = 15.dp)
             .zIndex(2f),
-        horizontalArrangement = Arrangement.SpaceBetween, // Căn logo bên trái, cột avatar + search bên phải
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Image(
             painter = painterResource(id = R.drawable.logo_vivu),
             contentDescription = "VIVU Logo",
             modifier = Modifier
-                .size(130.dp)  // Thử kích thước lớn hơn
-                .offset(y = (-20).dp), // Đẩy lên trên 20dp
-            )
+                .size(130.dp)
+                .offset(y = (-20).dp),
+        )
 
-        //  CỘT BÊN PHẢI: Chứa (Tên + Avatar) & (Thanh Tìm Kiếm)
-        Column(
-            horizontalAlignment = Alignment.End // Căn avatar về bên phải
-        ) {
-            // Avatar + Tên (BÊN TRÊN)
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        Column(horizontalAlignment = Alignment.End) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "Tên của bạn",
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(end = 8.dp).offset(y = 5.dp) // Khoảng cách giữa tên & avatar
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .offset(y = 5.dp)
                 )
 
                 Image(
@@ -141,10 +122,7 @@ fun TopHeader(modifier: Modifier = Modifier) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp)) // Khoảng cách giữa avatar và thanh tìm kiếm
-
-
-            // Thanh tìm kiếm
+            Spacer(modifier = Modifier.height(10.dp))
             SearchBar()
         }
     }

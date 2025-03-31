@@ -9,9 +9,11 @@ import com.example.vivu_app.R
 import com.example.vivu_app.model.Post
 import com.example.vivu_app.preferences.PreferencesManager
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.map
-
+import kotlinx.coroutines.launch
 
 
 class PostController(private val preferencesManager: PreferencesManager) : ViewModel() {
@@ -19,29 +21,40 @@ class PostController(private val preferencesManager: PreferencesManager) : ViewM
 
     // State lưu danh sách bài viết
     private val _posts = MutableStateFlow<List<Post>>(emptyList())
-    val posts: StateFlow<List<Post>> = _posts
+    val posts: StateFlow<List<Post>> = _posts.asStateFlow()
+
 
     // Cập nhật danh sách bài viết theo danh mục
     fun setCategory(category: String) {
-        _posts.value = getPostsByCategory(category)
-        Log.d("PostController", "Updated posts: ${_posts.value}") // 🛠️ Debug log
+        _posts.value = getPostsByCategory(category).map { post ->
+            post.copy(isFavorite = favoritePostIds.value.contains(post.id))
+        }
     }
-    private val _favoritePostIds: StateFlow<Set<Int>> = preferencesManager.favoritePosts
+
+    val favoritePostIds = preferencesManager.favoritePosts
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptySet())
 
 
-    val favoritePosts: StateFlow<List<Post>> = _favoritePostIds
-        .map { favoriteIds -> _posts.value.filter { it.id in favoriteIds } }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    val favoritePosts: StateFlow<List<Post>> = combine(_posts, favoritePostIds) { postsList, favoriteIds ->
+        postsList.filter { it.id in favoriteIds }.map { it.copy(isFavorite = true) }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
 
 
     // Hàm toggle favorite: khi bấm tim, cập nhật trạng thái isFavorite của bài viết có id tương ứng
     fun toggleFavorite(postId: Int) {
-        _posts.value = _posts.value.map { post ->
-            if (post.id == postId) post.copy(isFavorite = !post.isFavorite)
-            else post
+        viewModelScope.launch {
+            val currentFavorites = favoritePostIds.value.toMutableSet()
+            if (currentFavorites.contains(postId)) {
+                currentFavorites.remove(postId)
+            } else {
+                currentFavorites.add(postId)
+            }
+            preferencesManager.saveFavoritePosts(currentFavorites)
         }
     }
+
 
     // Hàm lấy danh sách bài viết yêu thích (các bài có isFavorite == true)
     fun getFavoritePosts(): List<Post> {
