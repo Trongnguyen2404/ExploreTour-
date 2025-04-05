@@ -37,37 +37,48 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.vivu_app.controller.PostController
+import com.example.vivu_app.view.posts.PostDetailScreen
 import com.example.vivu_app.view.posts.PostListScreen
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.vivu_app.view.home.PostDetailScreen
 
 
+
+
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
+
 fun AppNavigation(
     navController: NavHostController,
-    postController: PostController
+    postController: PostController // Thêm Controller
 ) {
-    val posts by postController.posts.collectAsState(initial = emptyList())
 
+
+    val posts by postController.posts.collectAsState(initial = emptyList())
     Box(modifier = Modifier.fillMaxSize()) {
 
         CloudAnimationScreen(modifier = Modifier.fillMaxSize().zIndex(0f))
 
         val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
 
-        NavHost(navController = navController, startDestination = "home") {
-            composable("home") { HomeScreen(navController, postController) }
+        NavHost(
+            navController = navController,
+            startDestination = "home"
+        ) {
+            composable("home") {
+                HomeScreen(navController, postController)}
+            // ✅ Truyền đúng ViewModel
 
-            composable("postList") { PostListScreen(navController, postController) }
+            composable("postList") {
+                PostListScreen(navController, postController)
+
+            }
 
             composable("favorites") { FavoritesScreen(navController, postController) }
 
             composable("chat") { ChatScreen(navController) }
-
             composable("profile") { ProfileScreen(navController) }
-
             composable(
-                route = "postDetail/{postTitle}",
+                "postDetail/{postTitle}",
                 arguments = listOf(navArgument("postTitle") { type = NavType.StringType })
             ) { backStackEntry ->
                 PostDetailScreen(navController, backStackEntry, postController)
@@ -85,31 +96,40 @@ fun AppNavigation(
     }
 }
 
+
 @Composable
 fun TopHeader(modifier: Modifier = Modifier) {
+    var searchText by remember { mutableStateOf("") }
+
     Row(
         modifier = modifier
-            .padding(top = 15.dp)
+//            .fillMaxWidth()
+            .padding(top = 15.dp) // Căn lề cho đẹp
             .zIndex(2f),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.SpaceBetween, // Căn logo bên trái, cột avatar + search bên phải
         verticalAlignment = Alignment.CenterVertically
     ) {
+
         Image(
             painter = painterResource(id = R.drawable.logo_vivu),
             contentDescription = "VIVU Logo",
             modifier = Modifier
-                .size(130.dp)
-                .offset(y = (-20).dp),
-        )
+                .size(130.dp)  // Thử kích thước lớn hơn
+                .offset(y = (-20).dp), // Đẩy lên trên 20dp
+            )
 
-        Column(horizontalAlignment = Alignment.End) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+        //  CỘT BÊN PHẢI: Chứa (Tên + Avatar) & (Thanh Tìm Kiếm)
+        Column(
+            horizontalAlignment = Alignment.End // Căn avatar về bên phải
+        ) {
+            // Avatar + Tên (BÊN TRÊN)
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = "Tên của bạn",
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .offset(y = 5.dp)
+                    modifier = Modifier.padding(end = 8.dp).offset(y = 5.dp) // Khoảng cách giữa tên & avatar
                 )
 
                 Image(
@@ -121,7 +141,10 @@ fun TopHeader(modifier: Modifier = Modifier) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp)) // Khoảng cách giữa avatar và thanh tìm kiếm
+
+
+            // Thanh tìm kiếm
             SearchBar()
         }
     }
@@ -175,3 +198,4 @@ fun SearchBar() {
         )
     }
 }
+
