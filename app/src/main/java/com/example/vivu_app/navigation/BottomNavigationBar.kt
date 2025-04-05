@@ -1,5 +1,6 @@
 package com.example.vivu_app.navigation
 
+import android.view.WindowInsets
 import androidx.benchmark.perfetto.Row
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -42,6 +44,7 @@ fun BottomNavigationBar(navController: NavController) {
             .clip(RoundedCornerShape(50.dp)), //  Bo tròn góc
         colors = CardDefaults.cardColors(containerColor = Color(0xFFF1E8D9)), // Màu nền be
         elevation = CardDefaults.cardElevation(6.dp) //  Bóng đổ nhẹ
+
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),

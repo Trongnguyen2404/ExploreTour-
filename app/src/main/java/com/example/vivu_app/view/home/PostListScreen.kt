@@ -46,17 +46,17 @@ fun PostListScreen(navController: NavController, postController: PostController)
 
 @Composable
 fun PostItem(
-    post: Post, // Sửa type từ Int thành Post
+    post: Post,
     navController: NavController,
     postController: PostController,
     onFavoriteClick: () -> Unit
-) {
+)
+{
     // Lấy danh sách bài viết yêu thích từ ViewModel
-    val favoritePosts = postController.favoritePosts.collectAsState(initial = emptyList<Post>()).value
-
+    val favoritePostsIds by postController.favoritePostIds.collectAsState()
 
     // Kiểm tra nếu bài viết có trong danh sách yêu thích (isFavorite = true)
-    val isFavorited = favoritePosts.any { it.id == post.id }
+    val isFavorited = favoritePostsIds.contains(post.id)
     Card(
         modifier = Modifier
             .width(450.dp)
@@ -68,7 +68,7 @@ fun PostItem(
     ) {
         Row(modifier = Modifier.padding(10.dp)) {
 
-
+            //ảnh v rating nằm chung
             Box(
                 modifier = Modifier
                     .width(155.dp)
@@ -128,18 +128,17 @@ fun PostItem(
                 painter = painterResource(
                     id = if (isFavorited) R.drawable.favorite_icon1 else R.drawable.favorite_icon
                 ),
-                contentDescription = "Favorite",
+                contentDescription = if (isFavorited) "Hủy yêu thích" else "Thêm vào yêu thích",
                 tint = if (isFavorited) Color.Red else Color.Gray,
                 modifier = Modifier
-                    .size(30.dp)
-                    .padding(end = 8.dp)
-                    .clickable {
-                        onFavoriteClick()
-                    }
+                    .padding(end = 10.dp)
+                    .size(24.dp)
+                    .clickable { onFavoriteClick() }
             )
         }
     }
 }
+
 
 @Composable
 fun InfoRow(icon: Int, text: String) {
