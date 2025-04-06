@@ -22,12 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.vivu_app.R
+import com.example.vivu_app.controller.PostController
 import com.example.vivu_app.model.Post
 import com.example.vivu_app.view.posts.InfoRow
 
 
 @Composable
-fun LocationDetailScreen(post: Post, navController: NavController) {
+fun LocationDetailScreen(post: Post, postViewModel: PostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -123,32 +124,9 @@ fun LocationDetailScreen(post: Post, navController: NavController) {
             )
         }
 
+        Spacer(modifier = Modifier.height(5.dp))
 
-
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Hàng chứa nút quay lại và yêu thích
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Button(onClick = { navController.popBackStack() }) {
-                Text("Quay lại")
-            }
-
-            var isFavorite by remember { mutableStateOf(post.isFavorite) }
-            IconButton(onClick = { isFavorite = !isFavorite }) {
-                Icon(
-                    painter = painterResource(id = if (isFavorite) R.drawable.favorite_icon1 else R.drawable.favorite_icon),
-                    contentDescription = "Yêu thích",
-                    tint = if (isFavorite) Color.Red else Color.Gray,
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .size(50.dp)
-                )
-            }
-        }
+        CommentSection(postViewModel)
     }
 }
 

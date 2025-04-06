@@ -1,11 +1,13 @@
 package com.example.vivu_app.controller
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import com.example.vivu_app.R
+import com.example.vivu_app.model.Comment
 import com.example.vivu_app.model.Post
 import com.example.vivu_app.model.PostType
 import com.example.vivu_app.preferences.PreferencesManager
@@ -144,5 +146,14 @@ class PostController(private val preferencesManager: PreferencesManager) : ViewM
     // Hàm lấy bài viết theo tiêu đề
     fun getPostByTitle(postTitle: String): Post? {
         return _posts.value.find { it.title == postTitle }
+    }
+
+//phần bình luận
+    private val _comments = mutableStateListOf<Comment>()
+    val comments: List<Comment> get() = _comments
+
+    fun addComment(comment: Comment) {
+        _comments.add(comment)
+        // Ở đây bạn có thể thêm logic gửi comment lên server nếu cần
     }
 }
