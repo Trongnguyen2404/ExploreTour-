@@ -1,5 +1,8 @@
 package com.example.vivu_app.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Comment(
     val id: String = "",
     val userId: String = "",

@@ -1,4 +1,4 @@
-package com.example.vivu_app.ui
+package com.example.vivu_app.ui.components
 
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility

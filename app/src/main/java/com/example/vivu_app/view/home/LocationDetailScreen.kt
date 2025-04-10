@@ -1,9 +1,7 @@
 package com.example.vivu_app.view.home
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,18 +15,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.vivu_app.R
 import com.example.vivu_app.controller.PostController
-import com.example.vivu_app.model.Post
-import com.example.vivu_app.view.posts.InfoRow
+import com.example.vivu_app.ui.components.CommentSection
+import com.example.vivu_app.ui.components.ExpandableText
+
 
 
 @Composable
-fun LocationDetailScreen(post: Post, postViewModel: PostController) {
+fun LocationDetailScreen(postId: Int, postViewModel: PostController) {
+    val post = postViewModel.posts.collectAsState().value.find { it.id == postId } ?: return
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -126,31 +124,13 @@ fun LocationDetailScreen(post: Post, postViewModel: PostController) {
 
         Spacer(modifier = Modifier.height(5.dp))
 
-        CommentSection(postViewModel)
-    }
-}
-
-@Composable
-fun ExpandableText(text: String, maxLines: Int = 3) {
-    var expanded by remember { mutableStateOf(false) } // Trạng thái mở rộng hoặc thu gọn
-
-    Column {
-        Text(
-            text = text,
-            maxLines = if (expanded) Int.MAX_VALUE else maxLines, // Hiển thị đầy đủ khi mở rộng
-            overflow = TextOverflow.Ellipsis, // Hiển thị "..." nếu bị cắt
-            style = MaterialTheme.typography.bodyMedium
-        )
-
-        Spacer(modifier = Modifier.height(4.dp)) // Khoảng cách nhỏ
-
-        Text(
-            text = if (expanded) "Thu gọn" else "Xem thêm...",
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold,
+        Column(
             modifier = Modifier
-                .clickable { expanded = !expanded } // Nhấn để thay đổi trạng thái
-                .padding(top = 4.dp)
-        )
+                .imePadding() // giúp đẩy nội dung khi keyboard hiện lên
+        ) {
+            // Gọi đến CommentSection và các phần khác
+            CommentSection(postId = post.id, postController = postViewModel)
+        }
     }
 }
+

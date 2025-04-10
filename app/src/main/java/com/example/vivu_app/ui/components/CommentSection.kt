@@ -1,5 +1,8 @@
-package com.example.vivu_app.view.home
+package com.example.vivu_app.ui.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -8,17 +11,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,58 +42,88 @@ import androidx.compose.ui.unit.dp
 import com.example.vivu_app.R
 import com.example.vivu_app.controller.PostController
 import com.example.vivu_app.model.Comment
-
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.draw.clip
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.vivu_app.model.Post
+import java.util.UUID
 
 
 @Composable
-fun CommentSection(postViewModel: PostController) {
+fun CommentSection(postId: Int, postController: PostController) {
+
+    val post = postController.posts.collectAsState().value.find { it.id == postId } ?: return
+
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp)
     ) {
         // Tiêu đề phần bình luận
         Text(
-            text = "COMMENT (${postViewModel.comments.size})",
+            text = "COMMENT (${post.comments.size})",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
         // Danh sách bình luận
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            postViewModel.comments.forEach { comment ->
+            post.comments.forEachIndexed { index, comment ->
                 CommentItem(comment)
-                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                if (index < post.comments.lastIndex) {
+                    Spacer(modifier = Modifier.height(6.dp)) // spacing nhẹ giữa comment
+                }
             }
+
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // Ô nhập bình luận
-        CommentInputSection(postViewModel)
+        CommentInputSection(postId = post.id, postController = viewModel())
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun CommentInputSection(postController: PostController) {
+fun CommentInputSection(postId: Int, postController: PostController) {
     var newComment by remember { mutableStateOf("") }
     var rating by remember { mutableStateOf(0) }
+
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val coroutineScope = rememberCoroutineScope()
+
+
+
+    // Auto scroll khi chọn sao
+    LaunchedEffect(rating) {
+        if (rating > 0) {
+            coroutineScope.launch {
+                bringIntoViewRequester.bringIntoView()
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp),
+            .padding(horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Rating stars
+        // Star rating
         StarRating(rating = rating, onRatingChanged = { rating = it })
 
         Text(
-            text = "Chạm vào ngôi sao để xếp hạng",
+            text = "chạm vào ngôi sao để xếp hạng",
             style = MaterialTheme.typography.bodySmall,
             color = Color.Gray,
             modifier = Modifier.padding(top = 4.dp)
@@ -107,33 +136,31 @@ fun CommentInputSection(postController: PostController) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .bringIntoViewRequester(bringIntoViewRequester)
             ) {
-                // Avatar bên trái
-                Icon(
-                    imageVector = Icons.Default.AccountCircle, // Hoặc Image(painterResource(id = R.drawable.avatar_user))
+                //  Avatar lồi ra bên trái
+                Image(
+                    painter = painterResource(id = R.drawable.avatar), // Thay bằng hình đúng
                     contentDescription = "Avatar",
-                    modifier = Modifier.size(50.dp)
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                        .border(1.dp, Color.LightGray, CircleShape)
                 )
 
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(4.dp))
 
-                // TextField + Send icon
+                // 💬 Khung comment
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .weight(1f)
-                        .width(400.dp)
-                        .heightIn(min = 50.dp)
-                        .border(
-                            width = 1.dp,
-                            color = Color.LightGray,
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                        .width(320.dp)
+                        .background(Color(0xFFE9E8E8), RoundedCornerShape(20.dp))
+                        .padding(horizontal = 6.dp, vertical = 4.dp)
                 ) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         TextField(
                             value = newComment,
@@ -153,7 +180,9 @@ fun CommentInputSection(postController: PostController) {
                             onClick = {
                                 if (newComment.isNotBlank()) {
                                     postController.addComment(
-                                        Comment(
+                                        postId = postId, //  THÊM DÒNG NÀY
+                                        comment = Comment(
+                                            id = UUID.randomUUID().toString(),
                                             userName = "Khách",
                                             content = newComment,
                                             rating = rating
@@ -166,10 +195,10 @@ fun CommentInputSection(postController: PostController) {
                             enabled = newComment.isNotBlank()
                         ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_send), // <-- Drawable từ res
-                                contentDescription = "Gửi bình luận",
-                                modifier = Modifier.size(30.dp),
-                                tint = MaterialTheme.colorScheme.primary
+                                painter = painterResource(id = R.drawable.ic_send), // Mũi tên màu xanh
+                                contentDescription = "Gửi",
+                                tint = Color(0xFF003DF5), // Màu xanh dương đậm
+                                modifier = Modifier.size(25.dp)
                             )
                         }
                     }
@@ -179,42 +208,47 @@ fun CommentInputSection(postController: PostController) {
     }
 }
 
+
+
 @Composable
 fun CommentItem(comment: Comment) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 5.dp, vertical = 6.dp)
-            .width(450.dp)
             .border(
                 width = 1.dp,
                 color = Color.Black,
-                shape = RoundedCornerShape(40.dp) // Bo tròn viền ngoài
+                shape = RoundedCornerShape(30.dp) // Viền bo tròn ngoài
             )
-            .padding(8.dp) // Padding giữa viền và nội dung
+            .padding(8.dp) // Padding giữa viền đen và nội dung bên trong
     ) {
         Row(
             verticalAlignment = Alignment.Top
         ) {
             // Avatar bên trái
-            Icon(
-                imageVector = Icons.Default.AccountCircle,
+            Image(
+                painter = painterResource(id = R.drawable.avatar), // Thay bằng hình
                 contentDescription = "Avatar",
-                modifier = Modifier.size(50.dp).offset(y = 5.dp),
-                tint = MaterialTheme.colorScheme.primary
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, Color.LightGray, CircleShape)
             )
 
-            Spacer(modifier = Modifier.width(2.dp))
+            Spacer(modifier = Modifier.width(6.dp))
 
-            // Nội dung bình luận bên phải trong nền sáng
+            // Khung xám chứa nội dung bình luận
             Surface(
                 shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                modifier = Modifier.width(270.dp)
+                color = Color(0xFFEAEAEA), // Màu xám nhạt
+                modifier = Modifier
+                    .weight(1f)
             ) {
-                Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
-
-                    // Hàng đầu: tên + đánh giá sao sát nhau
+                Column(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    // Dòng tên + sao
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -228,7 +262,7 @@ fun CommentItem(comment: Comment) {
                         StarRating(
                             rating = comment.rating,
                             editable = false,
-                            iconSize = 12.dp,
+                            iconSize = 14.dp,
                             spacing = 1.dp
                         )
                     }
@@ -236,15 +270,13 @@ fun CommentItem(comment: Comment) {
                     Spacer(modifier = Modifier.height(4.dp))
 
                     // Nội dung bình luận
-                    Text(
-                        text = comment.content,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                    ExpandableText(text = comment.content)
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun StarRating(
@@ -252,7 +284,7 @@ fun StarRating(
     editable: Boolean = true,
     onRatingChanged: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
-    iconSize: Dp = 40.dp,
+    iconSize: Dp = 24.dp,
     spacing: Dp = 2.dp
 ) {
     Row(
@@ -270,10 +302,7 @@ fun StarRating(
                         if (editable) Modifier.clickable { onRatingChanged(i) } else Modifier
                     )
             )
-            if (i < 5) {
-                Spacer(modifier = Modifier.width(spacing))
-            }
+            if (i < 5) Spacer(modifier = Modifier.width(spacing))
         }
     }
 }
-

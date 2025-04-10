@@ -10,7 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.vivu_app.controller.PostController
 import com.example.vivu_app.controller.PostControllerFactory
 import com.example.vivu_app.navigation.AppNavigation
-import com.example.vivu_app.preferences.PreferencesManager
+import com.example.vivu_app.data.local.PreferencesManager
 
 
 class MainActivity : ComponentActivity() {

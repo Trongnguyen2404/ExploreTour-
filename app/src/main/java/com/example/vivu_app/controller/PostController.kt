@@ -1,6 +1,5 @@
 package com.example.vivu_app.controller
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,12 +9,11 @@ import com.example.vivu_app.R
 import com.example.vivu_app.model.Comment
 import com.example.vivu_app.model.Post
 import com.example.vivu_app.model.PostType
-import com.example.vivu_app.preferences.PreferencesManager
+import com.example.vivu_app.data.local.PreferencesManager
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
@@ -31,6 +29,22 @@ class PostController(private val preferencesManager: PreferencesManager) : ViewM
     fun setCategory(category: String) {
         _posts.value = getPostsByCategory(category).map { post ->
             post.copy(isFavorite = favoritePostIds.value.contains(post.id))
+        }
+
+        viewModelScope.launch {
+            val postsFromCategory = getPostsByCategory(category)
+
+            val updatedPosts = postsFromCategory.map { post ->
+                val savedComments = preferencesManager.getComments(post.id)
+                post.copy(
+                    isFavorite = favoritePostIds.value.contains(post.id),
+                    comments = mutableStateListOf<Comment>().apply {
+                        addAll(savedComments)
+                    }
+                )
+            }
+
+            _posts.value = updatedPosts
         }
     }
 
@@ -64,6 +78,10 @@ class PostController(private val preferencesManager: PreferencesManager) : ViewM
         return _posts.value.filter { it.isFavorite }
     }
 
+    init {
+        setCategory("tour") // Hoặc "location", tuỳ theo use-case
+    }
+
     // Hàm lấy bài viết theo danh mục (giữ nguyên ID)
     private fun getPostsByCategory(category: String): List<Post> {
         return when (category) {
@@ -93,24 +111,29 @@ class PostController(private val preferencesManager: PreferencesManager) : ViewM
                     tourCode = "VN1234",
                     contact = "0346019375",
                     scheduleImageRes = R.drawable.calendar_photo,
-                    type = PostType.TOUR
+                    type = PostType.TOUR,
+                    comments = mutableStateListOf()
                 ),
 
-                        Post(id = 3, title = "Hà Nội",
+                        Post(
+                            id = 3, title = "Hà Nội",
                     content = "Khám phá Hà Nội",
                     imageRes = R.drawable.nha_trang, rating = 4.5, duration = "4N3Đ",
                     departureDate = "03/04/2024", remainingSeats = 20, isFavorite = false, tourCode = "BN5678", contact = "0346019375", type = PostType.TOUR),
-                Post(id = 2, title = "Tour Sài Gòn",
+                Post(
+                    id = 2, title = "Tour Sài Gòn",
                     content = "Trải nghiệm Sài Gòn",
                     imageRes = R.drawable.vung_tau, rating = 4.8, duration = "4N3Đ",
                     departureDate = "03/04/2024", remainingSeats = 20, isFavorite = false, tourCode = "VN9876", contact = "0346019375", type = PostType.TOUR),
-                Post(id = 4, title = "Tour Sài Gòn",
+                Post(
+                    id = 4, title = "Tour Sài Gòn",
                     content = "Trải nghiệm Sài Gòn",
                     imageRes = R.drawable.vung_tau, rating = 4.8, duration = "4N3Đ",
                     departureDate = "03/04/2024", remainingSeats = 20, isFavorite = false, tourCode = "QT2409", contact = "0988434280", type = PostType.TOUR)
             )
             "location" -> listOf(
-                Post(id = 5, title = "Tour Hà Nội",
+                Post(
+                    id = 5, title = "Tour Hà Nội",
                     content = """
         Du lịch Nha Trang 2025 cùng Du lịch Việt, chúng tôi luôn tổ chức Tour Du Lịch Nha Trang 2025, 
         những Tour Nha Trang 2025 chất lượng, giá rẻ để phục vụ khách du lịch trên toàn quốc.  
@@ -124,17 +147,26 @@ class PostController(private val preferencesManager: PreferencesManager) : ViewM
         ngả bóng... Được thưởng thức nhiều món ăn hấp dẫn, cùng khí hậu mát mẻ... Hứa hẹn đây sẽ là một kỳ 
         nghỉ đầy thú vị và ý nghĩa dành cho bạn.
     """.trimIndent(),
-                    imageRes = R.drawable.nha_trang, rating = 4.5, duration = "4N3Đ",
-                    departureDate = "03/04/2024", remainingSeats = 20, isFavorite = false, tourCode = "FG2044", contact = "0346019375", type = PostType.LOCATION),
-                Post(id = 6, title = "Tour Sài Gòn",
+                    imageRes = R.drawable.nha_trang,
+                    rating = 4.5, duration = "4N3Đ",
+                    departureDate = "03/04/2024",
+                    remainingSeats = 20, isFavorite = false,
+                    tourCode = "FG2044", contact = "0346019375",
+                    type = PostType.LOCATION,
+                    comments = mutableStateListOf()
+                ),
+                Post(
+                    id = 6, title = "Tour Sài Gòn",
                     content = "Trải nghiệm Sài Gòn",
                     imageRes = R.drawable.vung_tau, rating = 4.8, duration = "4N3Đ",
                     departureDate = "03/04/2024", remainingSeats = 20, isFavorite = false, tourCode = "HN2500", contact = "0925144923", type = PostType.LOCATION),
-                Post(id = 7, title = "Tour Hà Nội",
+                Post(
+                    id = 7, title = "Tour Hà Nội",
                     content = "Khám phá Hà Nội",
                     imageRes = R.drawable.nha_trang, rating = 4.5, duration = "4N3Đ",
                     departureDate = "03/04/2024", remainingSeats = 20, isFavorite = false, tourCode = "GJ12355", contact = "0123456789", type = PostType.LOCATION),
-                Post(id = 8, title = "Tour Sài Gòn",
+                Post(
+                    id = 8, title = "Tour Sài Gòn",
                     content = "Trải nghiệm Sài Gòn",
                     imageRes = R.drawable.vung_tau, rating = 4.8, duration = "4N3Đ",
                     departureDate = "03/04/2024", remainingSeats = 20, isFavorite = false, tourCode = "ON5678", contact = "0346019375", type = PostType.LOCATION)
@@ -152,8 +184,18 @@ class PostController(private val preferencesManager: PreferencesManager) : ViewM
     private val _comments = mutableStateListOf<Comment>()
     val comments: List<Comment> get() = _comments
 
-    fun addComment(comment: Comment) {
-        _comments.add(comment)
-        // Ở đây bạn có thể thêm logic gửi comment lên server nếu cần
+    fun addComment(postId: Int, comment: Comment) {
+        viewModelScope.launch {
+            _posts.value = _posts.value.map { post ->
+                if (post.id == postId) {
+                    val updatedComments = post.comments + comment
+                    preferencesManager.saveComments(postId, updatedComments)
+                    post.copy(comments = updatedComments)
+                } else post
+            }
+        }
     }
+
+
+
 }

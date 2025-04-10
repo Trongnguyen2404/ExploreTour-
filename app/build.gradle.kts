@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
 }
 
 android {
@@ -56,6 +58,7 @@ dependencies {
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
     implementation(libs.protolite.well.known.types)
+    implementation(libs.androidx.constraintlayout.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -64,21 +67,23 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("io.coil-kt:coil-compose:2.2.2")
-
+    // Jetpack Compose Core
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.compose.ui:ui:1.6.0")
     implementation("androidx.compose.material3:material3:1.2.0")
-    implementation("androidx.navigation:navigation-compose:2.7.6")
-    implementation("androidx.compose.material:material-icons-extended:1.6.0") // Thêm icons
+    implementation("androidx.compose.material:material-icons-extended:1.6.0")
 
-    implementation ("androidx.navigation:navigation-compose:2.7.7")
-    implementation("androidx.compose.material3:material3:1.2.0")
-    implementation("androidx.navigation:navigation-compose:2.X.X") // Trùng lặp
+// Navigation
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+// Coil ( cái mới nhất)
     implementation("io.coil-kt:coil-compose:2.5.0")
-    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
-    implementation ("com.google.dagger:hilt-android:2.50")
+// DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+// JSON Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
 
 }

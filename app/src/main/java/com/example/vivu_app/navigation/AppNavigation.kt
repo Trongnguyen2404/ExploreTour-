@@ -1,13 +1,12 @@
 package com.example.vivu_app.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.vivu_app.ui.CloudAnimationScreen // Import màn hình mây
+import com.example.vivu_app.ui.components.CloudAnimationScreen // Import màn hình mây
 import com.example.vivu_app.view.home.HomeScreen
 import com.example.vivu_app.view.favorites.FavoritesScreen
 import com.example.vivu_app.view.chat.ChatScreen
@@ -33,7 +32,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.vivu_app.controller.PostController
