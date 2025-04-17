@@ -1,4 +1,4 @@
-package com.example.vivu_app.view.posts
+package com.example.vivu_app.view.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

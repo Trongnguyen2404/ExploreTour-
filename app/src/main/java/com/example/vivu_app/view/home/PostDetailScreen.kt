@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -16,7 +18,6 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.example.vivu_app.controller.PostController
 import com.example.vivu_app.model.PostType
-import com.example.vivu_app.view.posts.TourDetailScreen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.zIndex
@@ -47,9 +48,13 @@ fun PostDetailScreen(
 
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0), // Tắt tất cả insets
+        modifier = Modifier
+            .fillMaxSize()
+            // Thêm padding theo insets hệ thống
+            .windowInsetsPadding(WindowInsets.safeDrawing),
         bottomBar = {
-            BottomNavigationBar(navController = navController)
-        }
+            BottomNavigationBar(navController)
+        },
     ) { innerPadding ->
         Box(modifier = Modifier
             .fillMaxSize()

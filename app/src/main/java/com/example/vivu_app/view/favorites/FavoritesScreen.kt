@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.vivu_app.R
 import com.example.vivu_app.controller.PostController
-import com.example.vivu_app.view.posts.PostItem
+import com.example.vivu_app.view.home.PostItem
 import com.example.vivu_app.navigation.BottomNavigationBar
 
 @Composable
@@ -25,7 +25,13 @@ fun FavoritesScreen(navController: NavController, postController: PostController
     val favoritePosts by postController.favoritePosts.collectAsState(initial = emptyList())
 
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController) }
+        modifier = Modifier
+            .fillMaxSize()
+            // Thêm padding theo insets hệ thống
+            .windowInsetsPadding(WindowInsets.safeDrawing),
+        bottomBar = {
+            BottomNavigationBar(navController)
+        },
     ) { innerPadding ->
         Box(modifier = Modifier
             .fillMaxSize()

@@ -1,4 +1,4 @@
-package com.example.vivu_app.view.posts
+package com.example.vivu_app.view.home
 
 import android.util.Log
 import androidx.compose.foundation.*
@@ -24,7 +24,7 @@ import androidx.compose.ui.*
 
 
 @Composable
-fun PostListScreen(navController: NavController, postController: PostController) {
+fun PostListScreen(navController: NavController, postController: PostController,modifier: Modifier = Modifier) {
     val posts by postController.posts.collectAsState(initial = emptyList()) // Lấy dữ liệu mới
 
     Log.d("PostListScreen", "Received posts: $posts") // Kiểm tra dữ liệu
@@ -66,13 +66,14 @@ fun PostItem(
         shape = RoundedCornerShape(40.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFE4DEE1))
     ) {
-        Row(modifier = Modifier.padding(10.dp)) {
-
+        Row(modifier = Modifier.padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically // thêm cái này!
+        ) {
             //ảnh v rating nằm chung
             Box(
                 modifier = Modifier
                     .width(155.dp)
-                    .height(140.dp)
+                    .fillMaxHeight() // thêm cái này cho khớp chiều cao cha
                     .clip(RoundedCornerShape(16.dp))
             ) {
                 Image(
@@ -115,8 +116,13 @@ fun PostItem(
 
             Spacer(modifier = Modifier.width(5.dp))
 
-            Column(modifier = Modifier.weight(1f)) {
-                Spacer(modifier = Modifier.height(25.dp))
+            Column(modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(), // 👈 giúp Column luôn đầy chiều cao
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
+            ) {
+//                Spacer(modifier = Modifier.height(25.dp))
                 InfoRow(icon = R.drawable.ic_location, text = post.title)
                 InfoRow(icon = R.drawable.ic_time, text = "Lịch trình: ${post.duration}")
                 InfoRow(icon = R.drawable.ic_calendar, text = "Khởi hành: ${post.departureDate}")
@@ -132,6 +138,7 @@ fun PostItem(
                 tint = if (isFavorited) Color.Red else Color.Gray,
                 modifier = Modifier
                     .padding(end = 10.dp)
+                    .align(Alignment.Top) // cố định icon ở góc trên
                     .size(24.dp)
                     .clickable { onFavoriteClick() }
             )

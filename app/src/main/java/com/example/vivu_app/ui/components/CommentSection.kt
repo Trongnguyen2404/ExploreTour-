@@ -51,7 +51,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.draw.clip
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.vivu_app.model.Post
 import java.util.UUID
 
 

@@ -20,7 +20,6 @@ import androidx.compose.ui.zIndex
 import com.example.vivu_app.controller.PostController
 import com.example.vivu_app.navigation.BottomNavigationBar
 import com.example.vivu_app.ui.components.CloudAnimationScreen
-import com.example.vivu_app.view.posts.PostListScreen
 import androidx.navigation.NavHostController
 
 
@@ -35,12 +34,21 @@ fun HomeScreen(navController: NavHostController, postController: PostController)
     }
 
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController) }
+        modifier = Modifier
+            .fillMaxSize()
+            // Thêm padding theo insets hệ thống
+            .windowInsetsPadding(WindowInsets.safeDrawing),
+        bottomBar = {
+            BottomNavigationBar(navController)
+        },
+        contentWindowInsets = WindowInsets.systemBars
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .windowInsetsPadding(WindowInsets.safeDrawing) // tránh bị che bởi status/nav bar
+//                .imePadding() // tự động chừa chỗ cho bàn phím
         ) {
             CloudAnimationScreen(
                 modifier = Modifier
@@ -63,6 +71,7 @@ fun HomeScreen(navController: NavHostController, postController: PostController)
                     CustomCategoryButton(
                         text = "TOUR",
                         isSelected = selectedCategory == "tour",
+                        modifier = Modifier.weight(1f),
                         onClick = {
                             selectedCategory = "tour"
                             postController.setCategory("tour")
@@ -71,6 +80,7 @@ fun HomeScreen(navController: NavHostController, postController: PostController)
                     CustomCategoryButton(
                         text = "LOCATION",
                         isSelected = selectedCategory == "location",
+                        modifier = Modifier.weight(1f),
                         onClick = {
                             selectedCategory = "location"
                             postController.setCategory("location")
@@ -83,6 +93,7 @@ fun HomeScreen(navController: NavHostController, postController: PostController)
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = 150.dp)
+                    .zIndex(2f)
             ) {
                 PostListScreen(navController, postController)
             }
@@ -91,7 +102,7 @@ fun HomeScreen(navController: NavHostController, postController: PostController)
 }
 
 @Composable
-fun CustomCategoryButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
+fun CustomCategoryButton(text: String, isSelected: Boolean,modifier: Modifier = Modifier, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .width(200.dp) // Độ rộng của viền ngoài
