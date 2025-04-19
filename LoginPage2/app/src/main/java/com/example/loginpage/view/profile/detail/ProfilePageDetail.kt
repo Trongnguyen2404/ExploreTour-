@@ -26,96 +26,99 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.R
+import com.example.loginpage.navigation.BottomNavigationBar
 
 @Composable
 fun ProfilePageDetail(navController: NavHostController) {
-    val viewModel: ProfileViewModel = viewModel() // Lấy ViewModel
+    val viewModel: ProfileViewModel = viewModel()
     val name by viewModel.name.collectAsState()
     val dateOfBirth by viewModel.dateOfBirth.collectAsState()
     val mobile by viewModel.mobile.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFE3E3E3))
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController) }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFE3E3E3))
+                .padding(innerPadding)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            IconButton(
-                onClick = { navController.popBackStack() },
-                modifier = Modifier
-                    .padding(top = 30.dp)
-                    .size(48.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.back_ic),
-                    contentDescription = "Back",
-                    tint = Color.Blue
+                IconButton(
+                    onClick = { navController.popBackStack() },
+                    modifier = Modifier
+                        .padding(top = 30.dp)
+                        .size(48.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.back_ic),
+                        contentDescription = "Back",
+                        tint = Color(0xFF00BCD4)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            ProfileImage(
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            ProfileInfoItem(label = "Name:", value = name)
+            Spacer(modifier = Modifier.height(20.dp))
+            ProfileInfoItem(label = "Date of birth:", value = dateOfBirth)
+            Spacer(modifier = Modifier.height(20.dp))
+            ProfileInfoItem(label = "Mobile:", value = mobile)
+            Spacer(modifier = Modifier.height(20.dp))
+
+            ProfileInfoItem(
+                label = "Email:",
+                value = "123*********"
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            ProfileInfoItem(
+                label = "Password:",
+                value = "********"
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Button(
+                onClick = {
+                    navController.navigate("profilePageDetailEdit")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFA1C9F1),
+                    contentColor = Color.Black
+                ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 5.dp,
+                    pressedElevation = 5.dp,
+                    disabledElevation = 0.dp
+                )
+            ) {
+                Text(
+                    text = "Edit Profile",
+                    style = TextStyle(fontSize = 20.sp)
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        ProfileImage(
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        ProfileInfoItem(label = "Name:", value = name)
-        Spacer(modifier = Modifier.height(20.dp))
-        ProfileInfoItem(label = "Date of birth:", value = dateOfBirth)
-        Spacer(modifier = Modifier.height(20.dp))
-        ProfileInfoItem(label = "Mobile:", value = mobile)
-        Spacer(modifier = Modifier.height(20.dp))
-
-        ProfileInfoItem(
-            label = "Email:",
-            value = "123*********",
-            isNavigatable = true,
-            onClick = { navController.navigate("profilePageEmail") }
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        ProfileInfoItem(
-            label = "Password:",
-            value = "********",
-            isNavigatable = true,
-            onClick = { navController.navigate("profilePagePassword") }
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Button(
-            onClick = {
-                navController.navigate("profilePageDetailEdit")
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFA1C9F1),
-                contentColor = Color.Black
-            ),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 5.dp,
-                pressedElevation = 5.dp,
-                disabledElevation = 0.dp
-            )
-        ) {
-            Text(
-                text = "Edit Profile",
-                style = TextStyle(fontSize = 20.sp)
-            )
-        }
     }
 }
+
 @Composable
 fun ProfileInfoItem(label: String, value: String, isNavigatable: Boolean = false, onClick: (() -> Unit)? = null) {
     Row(

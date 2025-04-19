@@ -75,7 +75,9 @@ fun ProfilePassword(navController: NavHostController) {
             text = "You must enter your email to change your password",
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .fillMaxWidth(),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -150,8 +152,8 @@ fun ProfilePassword(navController: NavHostController) {
                     contentColor = Color.Black
                 ),
                 elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 16.dp, // Đổ bóng đậm
-                    pressedElevation = 20.dp,
+                    defaultElevation = 5.dp, // Đổ bóng đậm
+                    pressedElevation = 5.dp,
                     disabledElevation = 0.dp
                 )
             ) {

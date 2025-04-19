@@ -24,6 +24,11 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 
 @Composable
@@ -32,18 +37,22 @@ fun CreateNewAccountScreen(navController: NavController): Unit {
     var password by remember { mutableStateOf("") }
     var repassword by remember { mutableStateOf("") }
     var passwordError by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+    var repasswordVisible by remember { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
 
-    fun validateAndProceed(){
-        when {
-            email.isBlank() -> passwordError = "Email cannot be empty"
-            password.isBlank() -> passwordError = "Password cannot be empty "
-            repassword.isBlank() -> passwordError = "Please confirm your password "
-            password != repassword -> passwordError = "Password do not the same "
+    fun validateAndProceed() {
+        passwordError = when {
+            email.isBlank() -> "Email cannot be empty"
+            !email.endsWith("@gmail.com") -> "Email must end with @gmail.com"
+            password.isBlank() -> "Password cannot be empty"
+            password.length < 8 || password.length > 12 -> "Password must be between 8 and 12 characters"
+            repassword.isBlank() -> "Please confirm your password"
+            password != repassword -> "Passwords do not match"
             else -> {
-                passwordError = ""
                 navController.navigate("createUsername")
+                ""
             }
         }
     }
@@ -110,7 +119,8 @@ fun CreateNewAccountScreen(navController: NavController): Unit {
                         focusManager.moveFocus(FocusDirection.Down) // Chuyển focus xuống dưới
                     }
                 ),
-                singleLine = true // Ngăn xuống dòng
+                singleLine = true, // Ngăn xuống dòng
+                textStyle = TextStyle(fontSize = 20.sp)
             )
         }
 
@@ -146,7 +156,18 @@ fun CreateNewAccountScreen(navController: NavController): Unit {
                         focusManager.moveFocus(FocusDirection.Down) // Chuyển focus xuống dưới
                     }
                 ),
-                singleLine = true // Ngăn xuống dòng
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image = if (passwordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(imageVector = image, contentDescription = null)
+                    }
+                },
+                singleLine = true,
+                textStyle = TextStyle(fontSize = 20.sp) // Chỗ này để tăng kích thước dấu *
             )
         }
 
@@ -162,7 +183,7 @@ fun CreateNewAccountScreen(navController: NavController): Unit {
             OutlinedTextField(
                 value = repassword,
                 onValueChange = { repassword = it },
-                placeholder = { Text("Enter password again", color = Color.Gray) },
+                placeholder = { Text("Enter re-password", color = Color.Gray) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp)), // Cắt nền theo viền bo tròn
@@ -182,16 +203,30 @@ fun CreateNewAccountScreen(navController: NavController): Unit {
                         validateAndProceed() // gọi hàm khi nhấn enter
                     }
                 ),
-                singleLine = true // Ngăn xuống dòng
+                visualTransformation = if (repasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image = if (repasswordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = { repasswordVisible = !repasswordVisible }) {
+                        Icon(imageVector = image, contentDescription = null)
+                    }
+                },
+                singleLine = true,
+                textStyle = TextStyle(fontSize = 20.sp) //  Chỗ này để tăng kích thước dấu *
             )
         }
 
         Text(
-            text = if(passwordError.isNotBlank()) passwordError else "",
-                color = Color.Red,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.Start)
+            text = passwordError,
+            color = Color.Red,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(top = 8.dp, bottom = 8.dp),
+            lineHeight = 18.sp // thêm khoảng cách nếu dòng bị đẩy xuống
         )
 
         Spacer(modifier = Modifier.height(30.dp))

@@ -30,12 +30,14 @@ fun NameInCreateNewAccount(navController: NavController): Unit {
     var username by remember { mutableStateOf("") }
     var usernameError by remember { mutableStateOf("") }
 
-    fun validateAndProceed(){
-        if (username.isBlank()){
-            usernameError = "Username cannot be empty"
-        } else {
-            usernameError = ""
-            navController.popBackStack("login", inclusive = false)
+    fun validateAndProceed() {
+        usernameError = when {
+            username.isBlank() -> "Username cannot be empty"
+            username.length < 8 || username.length > 12 -> "Username must be between 8 and 12 characters"
+            else -> {
+                navController.navigate("login")
+                ""
+            }
         }
     }
 
@@ -81,7 +83,7 @@ fun NameInCreateNewAccount(navController: NavController): Unit {
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
-                placeholder = { Text("Email or username", color = Color.Gray) },
+                placeholder = { Text("Enter your username", color = Color.Gray) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp)), // Cắt nền theo viền bo tròn
@@ -106,11 +108,14 @@ fun NameInCreateNewAccount(navController: NavController): Unit {
         }
 
         Text(
-            text = usernameError, // hiển thị lỗi nếu có
+            text = usernameError,
             color = Color.Red,
             fontSize = 15.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.Start)
+            lineHeight = 18.sp,
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(top = 8.dp, bottom = 8.dp)
         )
 
 

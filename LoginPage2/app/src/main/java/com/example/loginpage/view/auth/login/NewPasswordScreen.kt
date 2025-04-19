@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +23,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -30,17 +35,20 @@ fun NewPasswordScreen(navController: NavController) {
     var repassword by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordError by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+    var repasswordVisible by remember { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
 
-    fun validateAndProceed(){
-        when {
-            password.isBlank() -> passwordError = "Password cannot be empty "
-            repassword.isBlank() -> passwordError = "Please confirm your password "
-            password != repassword -> passwordError = "Password do not the same "
+    fun validateAndProceed() {
+        passwordError = when {
+            password.isBlank() -> "Password cannot be empty"
+            password.length < 8 || password.length > 12 -> "Password must be between 8 and 12 characters"
+            repassword.isBlank() -> "Please confirm your password"
+            password != repassword -> "Passwords do not match"
             else -> {
-                passwordError = ""
-                navController.popBackStack("login", inclusive = false)
+                navController.navigate("createUsername")
+                ""
             }
         }
     }
@@ -106,6 +114,16 @@ fun NewPasswordScreen(navController: NavController) {
                         focusManager.moveFocus(FocusDirection.Down) // Chuyển focus xuống dưới
                     }
                 ),
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image = if (passwordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(imageVector = image, contentDescription = null)
+                    }
+                },
                 singleLine = true, // Ngăn xuống dòng
                 textStyle = TextStyle(fontSize = 20.sp) // Tăng cỡ chữ trong khung nhập
             )
@@ -141,17 +159,30 @@ fun NewPasswordScreen(navController: NavController) {
                         validateAndProceed() // gọi hàm khi nhấn enter
                     }
                 ),
+                visualTransformation = if (repasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image = if (repasswordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = { repasswordVisible = !repasswordVisible }) {
+                        Icon(imageVector = image, contentDescription = null)
+                    }
+                },
                 singleLine = true, // Ngăn xuống dòng
                 textStyle = TextStyle(fontSize = 20.sp) // Tăng cỡ chữ trong khung nhập
             )
         }
 
         Text(
-            text = passwordError, // Hiển thị lỗi nếu có
+            text = passwordError,
             color = Color.Red,
             fontSize = 15.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.Start)
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(top = 8.dp, bottom = 8.dp),
+            lineHeight = 18.sp // thêm khoảng cách nếu dòng bị đẩy xuống
         )
 
         Spacer(modifier = Modifier.height(30.dp))

@@ -20,15 +20,13 @@ class OnboardingUtils( private val context: Context) {
 
     //Kiểm tra trạng thái đăng nhập
     fun isLogIn(): Boolean {
-        return sharedPreferences.getBoolean("loginPage", false )
+        return sharedPreferences.getBoolean("login", false )
     }
 
     //Lưu trạng thái đăng nhập
-    fun setLogIn() { // Thêm phương thức để lưu trạng thái đăng nhập
-        sharedPreferences.edit().putBoolean("isLogIn", true).apply()
-    }
-
-    fun clearLogIn() { // Thêm phương thức để xóa trạng thái đăng nhập nếu cần (ví dụ: khi đăng xuất)
-        sharedPreferences.edit().putBoolean("isLogIn", false).apply()
+    fun setLogIn(logIn: Boolean) {
+        sharedPreferences.edit()
+            .putBoolean("login", logIn)
+            .apply()
     }
 }

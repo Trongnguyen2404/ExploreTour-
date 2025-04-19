@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,14 +31,16 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.R
 import com.example.loginpage.ui.theme.YourAppTheme
+import android.util.Log
+
 
 @Composable
 fun ProfilePageDetailEdit(navController: NavHostController) {
     YourAppTheme {
         val viewModel: ProfileViewModel = viewModel()
-        val name by viewModel.name.collectAsState()
-        val dateOfBirth by viewModel.dateOfBirth.collectAsState()
-        val mobile by viewModel.mobile.collectAsState()
+        var name by remember {mutableStateOf("") }
+        var dateOfBirth by remember{mutableStateOf("")}
+        var mobile by remember { mutableStateOf("") }
         val email = "123*********"
         val password = "********"
 
@@ -63,7 +64,7 @@ fun ProfilePageDetailEdit(navController: NavHostController) {
                     Icon(
                         painter = painterResource(id = R.drawable.back_ic),
                         contentDescription = "Back",
-                        tint = Color.Blue
+                        tint = Color(0xFF00BCD4)
                     )
                 }
             }
@@ -85,28 +86,146 @@ fun ProfilePageDetailEdit(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            EditProfileInfoItem(
-                label = "Name:",
-                value = name,
-                onValueChange = { viewModel.updateName(it) }
-            )
+            // Trường Name
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp)
+                    .background(Color.White, shape = RoundedCornerShape(20.dp))
+                    .border(2.dp, Color.Black, RoundedCornerShape(20.dp))
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Name:",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        textStyle = TextStyle(
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        ),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next
+                        ),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            cursorColor = Color.Black,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+                        )
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            EditProfileInfoItem(
-                label = "Date of birth:",
-                value = dateOfBirth,
-                onValueChange = { viewModel.updateDateOfBirth(it) }
-            )
+            // Trường Date of birth
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp)
+                    .background(Color.White, shape = RoundedCornerShape(20.dp))
+                    .border(2.dp, Color.Black, RoundedCornerShape(20.dp))
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Date of birth:",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    OutlinedTextField(
+                        value = dateOfBirth,
+                        onValueChange = { dateOfBirth = it },
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        textStyle = TextStyle(
+                            fontSize = 20.sp,
+                            color = Color.Black
+
+                        ),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next
+                        ),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            cursorColor = Color.Black,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+                        )
+
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            EditProfileInfoItem(
-                label = "Mobile:",
-                value = mobile,
-                onValueChange = { viewModel.updateMobile(it) },
-                keyboardType = KeyboardType.Phone
-            )
+            // Trường Mobile
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp)
+                    .background(Color.White, shape = RoundedCornerShape(20.dp))
+                    .border(2.dp, Color.Black, RoundedCornerShape(20.dp))
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Name:",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    OutlinedTextField(
+                        value = mobile,
+                        onValueChange = { mobile = it },
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        textStyle = TextStyle(
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        ),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next
+                        ),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            cursorColor = Color.Black,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+                        )
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -154,58 +273,7 @@ fun ProfilePageDetailEdit(navController: NavHostController) {
     }
 }
 
-// Composable để hiển thị và chỉnh sửa thông tin
-@Composable
-fun EditProfileInfoItem(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    keyboardType: KeyboardType = KeyboardType.Text
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(70.dp)
-            .padding(vertical = 8.dp)
-            .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(20.dp))
-            .background(Color.White, shape = RoundedCornerShape(20.dp))
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = label,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
-            modifier = Modifier
-                .weight(1f)
-                .height(50.dp),
-            textStyle = TextStyle(
-                fontSize = 16.sp,
-                color = Color.Black // Đảm bảo màu chữ là đen
-            ),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = keyboardType,
-                imeAction = ImeAction.Next
-            ),
-            colors = TextFieldDefaults.colors(
-                cursorColor = Color.Black, // Màu con trỏ
-                focusedContainerColor = Color.White, // Màu nền khi focus
-                unfocusedContainerColor = Color.White, // Màu nền khi không focus
-                focusedIndicatorColor = Color.Black, // Màu viền khi focus
-                unfocusedIndicatorColor = Color.Gray // Màu viền khi không focus
-            )
-        )
-    }
-}
 
-// Composable để hiển thị thông tin tĩnh (dùng lại từ ProfilePageDetail)
 @Composable
 fun ProfileInfoItems(
     label: String,
@@ -226,7 +294,7 @@ fun ProfileInfoItems(
     ) {
         Text(
             text = label,
-            fontSize = 16.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.width(8.dp))
@@ -245,8 +313,6 @@ fun ProfileInfoItems(
         }
     }
 }
-
-
 
 @Composable
 fun ProfileImages(modifier: Modifier = Modifier) {
@@ -269,8 +335,7 @@ fun ProfileImages(modifier: Modifier = Modifier) {
                 painter = if (imageUri == null) painterResource(R.drawable.emilia_clarke)
                 else rememberAsyncImagePainter(imageUri),
                 contentDescription = "Profile Image",
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
         }

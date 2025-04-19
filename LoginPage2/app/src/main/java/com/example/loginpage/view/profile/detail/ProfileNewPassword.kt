@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,24 +25,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.loginpage.R
-
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 @Composable
 fun ProfileNewPassword(navController: NavHostController) {
     var repassword by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordError by remember { mutableStateOf("") }
-
+    val isFormValid = password.length in 8..12 && password == repassword
     val focusManager = LocalFocusManager.current
+    var passwordVisible by remember { mutableStateOf(false) }
+    var repasswordVisible by remember { mutableStateOf(false) }
 
-    fun validateAndProceed(){
-        when {
-            password.isBlank() -> passwordError = "Password cannot be empty "
-            repassword.isBlank() -> passwordError = "Please confirm your password "
-            password != repassword -> passwordError = "Password do not the same "
+    fun validateAndProceed() {
+        passwordError = when {
+            password.isBlank() -> "Password cannot be empty"
+            repassword.isBlank() -> "Please confirm your password"
+            password.length !in 8..12 -> "Password must be between 8 to 12 characters"
+            password != repassword -> "Passwords do not match"
             else -> {
-                passwordError = ""
-                navController.popBackStack("profilePageDetail", inclusive = false)
+                navController.popBackStack("profilePageDetailEdit", inclusive = false)
+                ""
             }
         }
     }
@@ -75,9 +82,11 @@ fun ProfileNewPassword(navController: NavHostController) {
         // Tiêu đề
         Text(
             text = "You need to enter a new password",
-            fontSize = 15.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .fillMaxWidth(),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -111,6 +120,16 @@ fun ProfileNewPassword(navController: NavHostController) {
                         focusManager.moveFocus(FocusDirection.Down) // Chuyển focus xuống dưới
                     }
                 ),
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image = if (passwordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(imageVector = image, contentDescription = null)
+                    }
+                },
                 singleLine = true, // Ngăn xuống dòng
                 textStyle = TextStyle(fontSize = 20.sp) // Tăng cỡ chữ trong khung nhập
             )
@@ -144,9 +163,19 @@ fun ProfileNewPassword(navController: NavHostController) {
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        validateAndProceed() // gọi hàm khi nhấn enter
+                        validateAndProceed()
                     }
                 ),
+                visualTransformation = if (repasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image = if (repasswordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = { repasswordVisible = !repasswordVisible }) {
+                        Icon(imageVector = image, contentDescription = null)
+                    }
+                },
                 singleLine = true, // Ngăn xuống dòng
                 textStyle = TextStyle(fontSize = 20.sp) // Tăng cỡ chữ trong khung nhập
             )
@@ -174,16 +203,15 @@ fun ProfileNewPassword(navController: NavHostController) {
                 },
                 modifier = Modifier
                     .padding(top = 30.dp)
-                    .height(32.dp), // Thu nhỏ chiều cao nút
-
+                    .height(32.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Black
                 ),
                 elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 16.dp, // Độ cao mặc định tạo bóng
-                    pressedElevation = 20.dp, // Độ cao khi nhấn
-                    disabledElevation = 0.dp // Độ cao khi vô hiệu hóa
+                    defaultElevation = 5.dp,
+                    pressedElevation = 5.dp,
+                    disabledElevation = 0.dp
                 )
             ) {
                 Text(

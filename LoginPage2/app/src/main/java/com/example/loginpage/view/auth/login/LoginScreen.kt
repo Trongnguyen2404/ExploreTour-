@@ -1,4 +1,3 @@
-// LoginScreen.kt
 package com.example.loginpage.view.auth.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,7 +27,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.loginpage.R
 import com.example.loginpage.view.onboarding.OnboardingUtils
-
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 
 @Composable
 fun LoginScreen(navController: NavController,
@@ -38,22 +41,32 @@ fun LoginScreen(navController: NavController,
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var emailOrPasswordError by remember { mutableStateOf("") }
-
+    var passwordVisible by remember { mutableStateOf(false) }
     val fakeemail = "123@gmail.com"
     val fakepassword = "12345678"
 
     val focusManager = LocalFocusManager.current
 
-    fun validateAndProceed(){
+
+    fun validateEmail(email: String): Boolean {
+        return email.contains("@gmail.com")
+    }
+
+    fun validatePassword(password: String): Boolean {
+        return password.length in 8..12
+    }
+
+    fun validateAndProceed() {
         when {
             email.isBlank() -> emailOrPasswordError = "Email or username cannot be empty"
             password.isBlank() -> emailOrPasswordError = "Password cannot be empty"
+            !validateEmail(email) -> emailOrPasswordError = "Email must enter @gmail.com address"
+            !validatePassword(password) -> emailOrPasswordError = "Password must be between 8 and 12 characters"
             email != fakeemail || password != fakepassword -> emailOrPasswordError =
                 "Incorrect email or password"
-
             else -> {
                 emailOrPasswordError = ""
-                onboardingUtils.setLogIn() // Lưu trạng thái đăng nhập
+                onboardingUtils.setLogIn(true) // Lưu trạng thái đăng nhập khi đăng nhập thành công
                 navController.navigate("home") {
                     popUpTo("login") { inclusive = true } // Xóa LoginScreen khỏi back stack
                 }
@@ -126,6 +139,7 @@ fun LoginScreen(navController: NavController,
                 ),
                 singleLine = true ,// Ngăn xuống dòng
                 textStyle = TextStyle(fontSize = 20.sp) // Tăng cỡ chữ trong khung nhập
+
             )
         }
 
@@ -142,26 +156,36 @@ fun LoginScreen(navController: NavController,
                 placeholder = { Text("Password", color = Color.Gray) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp)), // Cắt nền theo viền bo tròn
-                shape = RoundedCornerShape(12.dp), // Bo tròn khung
+                    .clip(RoundedCornerShape(12.dp)),
+                shape = RoundedCornerShape(12.dp),
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Gray, // Màu viền khi focus
-                    unfocusedIndicatorColor = Color.Gray, // Màu viền khi không focus
-                    focusedContainerColor = Color.White, // Nền khi focus
-                    unfocusedContainerColor = Color.White // Nền khi không focus
+                    focusedIndicatorColor = Color.Gray,
+                    unfocusedIndicatorColor = Color.Gray,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 ),
                 keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done, // Chuyển sang hoàn thành
-                    keyboardType = KeyboardType.Password // Bàn phím cho mật khẩu
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = {
-                        validateAndProceed() // gọi hàm khi nhấn enter
-                    }
+                    onDone = { validateAndProceed() }
                 ),
-                singleLine = true ,// Ngăn xuống dòng
-                textStyle = TextStyle(fontSize = 20.sp) // Tăng cỡ chữ trong khung nhập
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image = if (passwordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(imageVector = image, contentDescription = null)
+                    }
+                },
+                singleLine = true,
+                textStyle = TextStyle(fontSize = 20.sp)
+
             )
+
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -233,7 +257,4 @@ fun LoginScreen(navController: NavController,
             )
         }
     }
-
-
 }
-

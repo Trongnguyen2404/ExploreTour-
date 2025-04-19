@@ -12,9 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -31,12 +29,14 @@ fun ProfileNewEmail(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var emailError by remember { mutableStateOf("") }
 
-    fun validateAndProceed(){
-        if (email.isBlank()){
-            emailError = "Username cannot be empty"
-        } else {
-            emailError = ""
-            navController.popBackStack("profilePageDetail", inclusive = false)
+    fun validateAndProceed() {
+        emailError = when {
+            email.isBlank() -> "Email cannot be empty"
+            !email.contains("@gmail.com") -> "Email must contain @gmail.com"
+            else -> {
+                navController.popBackStack("profilePageDetailEdit", inclusive = false)
+                ""
+            }
         }
     }
 
@@ -71,7 +71,9 @@ fun ProfileNewEmail(navController: NavHostController) {
             text = "You must enter your new email",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .fillMaxWidth(),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -110,6 +112,19 @@ fun ProfileNewEmail(navController: NavHostController) {
             )
         }
 
+        if (emailError.isNotEmpty()) {
+            Text(
+                text = emailError,
+                color = Color.Red,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(top = 4.dp)
+            )
+        }
+
+
         Spacer(modifier = Modifier.weight(1f))
 
         // Nút Next
@@ -121,7 +136,9 @@ fun ProfileNewEmail(navController: NavHostController) {
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Button(
-                onClick = { navController.navigate("profilePageDetail") },
+                onClick = {
+                    validateAndProceed()
+                },
                 modifier = Modifier
                     .padding(top = 30.dp)
                     .height(32.dp), // Thu nhỏ chiều cao nút
@@ -129,6 +146,11 @@ fun ProfileNewEmail(navController: NavHostController) {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Black
+                ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 5.dp, // Đổ bóng đậm
+                    pressedElevation = 5.dp,
+                    disabledElevation = 0.dp
                 )
             ) {
                 Text(

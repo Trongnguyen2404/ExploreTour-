@@ -5,10 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -27,7 +31,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+
 
 @Composable
 fun OnboardingGraphUI(
@@ -35,12 +39,13 @@ fun OnboardingGraphUI(
     layoutType: String = "title_above_description_below",
     imageWidth: Dp = 300.dp,
     imageHeight: Dp = 200.dp,
-    navController: NavController? = null
+    navController: NavController? = null ,
+    onFinalClick: (() -> Unit)? = null
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(600.dp) // Giảm chiều cao để tránh bị cắt
+            .fillMaxSize()
+
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
@@ -50,6 +55,7 @@ fun OnboardingGraphUI(
                     )
                 )
             ),
+
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -67,23 +73,25 @@ fun OnboardingGraphUI(
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
-                Spacer(modifier = Modifier.fillMaxWidth().size(20.dp))
+                Spacer(modifier = Modifier.size(20.dp))
 
                 Image(
                     painter = painterResource(id = onboardingModel.image),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(width = imageWidth, height = imageHeight)
-                        .padding(50.dp, 0.dp),
-                    alignment = Alignment.Center
+                        .size(width = imageWidth, height = imageHeight),
+                    alignment = Alignment.Center,
+                    contentScale = ContentScale.Fit
                 )
 
-                Spacer(modifier = Modifier.fillMaxWidth().size(20.dp))
+                Spacer(modifier = Modifier.size(20.dp))
 
                 if (onboardingModel.description.isNotEmpty()) {
                     Text(
                         text = onboardingModel.description,
-                        modifier = Modifier.fillMaxWidth().padding(15.dp, 0.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp),
                         fontSize = 20.sp,
                         lineHeight = 28.sp,
                         textAlign = TextAlign.Center,
@@ -102,14 +110,12 @@ fun OnboardingGraphUI(
                     painter = painterResource(id = onboardingModel.image),
                     contentDescription = null,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
                         .size(width = imageWidth, height = imageHeight),
                     alignment = Alignment.Center,
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Fit
                 )
 
-                Spacer(modifier = Modifier.fillMaxWidth().size(20.dp))
+                Spacer(modifier = Modifier.size(20.dp))
 
                 Text(
                     text = onboardingModel.title,
@@ -120,12 +126,14 @@ fun OnboardingGraphUI(
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
-                Spacer(modifier = Modifier.fillMaxWidth().size(10.dp))
+                Spacer(modifier = Modifier.size(10.dp))
 
                 if (onboardingModel.description.isNotEmpty()) {
                     Text(
                         text = onboardingModel.description,
-                        modifier = Modifier.fillMaxWidth().padding(15.dp, 0.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp),
                         fontSize = 20.sp,
                         lineHeight = 28.sp,
                         textAlign = TextAlign.Center,
@@ -135,13 +143,13 @@ fun OnboardingGraphUI(
                 } else {
                     Spacer(modifier = Modifier.size(30.dp))
                 }
+
                 Spacer(modifier = Modifier.size(10.dp))
             }
 
             "title_image_button_description_button" -> {
-                Spacer(modifier = Modifier.size(20.dp))
+                Spacer(modifier = Modifier.size(110.dp))
 
-                // Tiêu đề
                 Text(
                     text = onboardingModel.title,
                     modifier = Modifier.fillMaxWidth(),
@@ -152,24 +160,23 @@ fun OnboardingGraphUI(
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
-                Spacer(modifier = Modifier.size(15.dp))
+                Spacer(modifier = Modifier.size(16.dp))
 
-                // Hình ảnh
                 Image(
                     painter = painterResource(id = onboardingModel.image),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(width = imageWidth, height = imageHeight)
-                        .padding(horizontal = 50.dp),
-                    alignment = Alignment.Center
+                        .size(width = imageWidth, height = imageHeight),
+                    alignment = Alignment.Center,
+                    contentScale = ContentScale.Fit
                 )
 
-                Spacer(modifier = Modifier.size(15.dp))
+                Spacer(modifier = Modifier.size(16.dp))
 
-                // Sign in
                 if (onboardingModel.buttonText1.isNotEmpty()) {
                     Button(
                         onClick = {
+                            onFinalClick?.invoke()
                             navController?.navigate("login")
                         },
                         modifier = Modifier
@@ -177,7 +184,7 @@ fun OnboardingGraphUI(
                             .padding(horizontal = 50.dp)
                             .height(48.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF4A90E2) // Màu xanh cho nút "Sign in"
+                            containerColor = Color(0xFF4A90E2)
                         )
                     ) {
                         Text(
@@ -186,22 +193,17 @@ fun OnboardingGraphUI(
                             color = Color.Black
                         )
                     }
-                } else {
-                    Text(
-                        text = "Nút thứ nhất chưa có văn bản",
-                        color = Color.Red,
-                        modifier = Modifier.padding(10.dp)
-                    )
                 }
 
-                Spacer(modifier = Modifier.size(10.dp))
+                Spacer(modifier = Modifier.size(15.dp))
 
-                // Mô tả
                 if (onboardingModel.description.isNotEmpty()) {
                     Text(
                         text = onboardingModel.description,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp),
-                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp),
+                        fontSize = 24.sp,
                         lineHeight = 26.sp,
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodySmall,
@@ -209,9 +211,8 @@ fun OnboardingGraphUI(
                     )
                 }
 
-                Spacer(modifier = Modifier.size(10.dp))
+                Spacer(modifier = Modifier.size(15.dp))
 
-                //Sign up
                 if (onboardingModel.buttonText2.isNotEmpty()) {
                     Button(
                         onClick = {
@@ -222,7 +223,7 @@ fun OnboardingGraphUI(
                             .padding(horizontal = 50.dp)
                             .height(48.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFCCCCCC) // Màu xám cho nút "Sign up"
+                            containerColor = Color(0xFFCCCCCC)
                         )
                     ) {
                         Text(
@@ -231,12 +232,6 @@ fun OnboardingGraphUI(
                             color = Color.Black
                         )
                     }
-                } else {
-                    Text(
-                        text = "Nút thứ hai chưa có văn bản",
-                        color = Color.Red,
-                        modifier = Modifier.padding(10.dp)
-                    )
                 }
 
                 Spacer(modifier = Modifier.size(10.dp))
@@ -244,6 +239,7 @@ fun OnboardingGraphUI(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

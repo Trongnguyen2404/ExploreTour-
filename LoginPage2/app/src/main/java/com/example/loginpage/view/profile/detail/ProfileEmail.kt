@@ -20,19 +20,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.loginpage.R
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 
 @Composable
 fun ProfileEmail(navController: NavHostController) {
     var password by remember { mutableStateOf("") }
     var passwordError by remember { mutableStateOf("") } // Biến trạng thái lỗi
-
+    var passwordVisible by remember { mutableStateOf(false) }
     val fakepassword = "12345678"
 
     // Hàm kiểm tra và xử lý dữ liệu
     fun validateAndProceed() {
         when {
             password.isBlank() -> passwordError = "Email cannot be empty"
-           password != fakepassword -> passwordError = "Incorrect email"
+            password != fakepassword -> passwordError = "Incorrect email"
             else -> {
                 passwordError = ""
                 navController.navigate("profilePageNewEmail")
@@ -72,7 +77,9 @@ fun ProfileEmail(navController: NavHostController) {
             text = "You must enter your password to change your email",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .fillMaxWidth(),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -106,6 +113,16 @@ fun ProfileEmail(navController: NavHostController) {
                         validateAndProceed()
                     }
                 ),
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image = if (passwordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(imageVector = image, contentDescription = null)
+                    }
+                },
                 singleLine = true,
                 textStyle = TextStyle(fontSize = 20.sp)
             )
@@ -144,8 +161,8 @@ fun ProfileEmail(navController: NavHostController) {
                     contentColor = Color.Black
                 ),
                 elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 16.dp, // Đổ bóng đậm
-                    pressedElevation = 20.dp,
+                    defaultElevation = 5.dp, // Đổ bóng đậm
+                    pressedElevation = 5.dp,
                     disabledElevation = 0.dp
                 )
             ) {

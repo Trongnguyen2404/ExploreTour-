@@ -1,8 +1,7 @@
 package com.example.loginpage.view.onboarding
 
 
-import android.media.MediaTimestamp
-import androidx.compose.foundation.background
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -172,7 +171,7 @@ fun OnboardingScreen(
                         0 -> Pair(320.dp, 330.dp)
                         1 -> Pair(420.dp, 300.dp)
                         2 -> Pair(420.dp, 300.dp)
-                        3 -> Pair(320.dp, 320.dp)
+                        3 -> Pair(300.dp, 260.dp)
                         else -> Pair(420.dp, 320.dp)
                     }
                     OnboardingGraphUI(
@@ -180,7 +179,8 @@ fun OnboardingScreen(
                         layoutType = layoutType,
                         imageWidth = imageWidth,
                         imageHeight = imageHeight,
-                        navController = navController
+                        navController = navController,
+                        onFinalClick = if (index == pages.size - 1) onFinished else null
                     )
 
                 }

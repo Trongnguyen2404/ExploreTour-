@@ -64,7 +64,6 @@ fun AppNavigation(
     val routesWithTopHeader = listOf(
         "home",
         "postList",
-//        "chat",
         "profile"
     )
 
