@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,27 +15,37 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.vivu_app.R
 import com.example.vivu_app.controller.PostController
 import com.example.vivu_app.view.home.PostItem
 import com.example.vivu_app.navigation.BottomNavigationBar
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.foundation.layout.WindowInsets
+
+
+
+
 
 @Composable
 fun FavoritesScreen(navController: NavController, postController: PostController) {
     val favoritePosts by postController.favoritePosts.collectAsState(initial = emptyList())
+    val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+
+
 
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             // Thêm padding theo insets hệ thống
-            .windowInsetsPadding(WindowInsets.safeDrawing),
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)),
         bottomBar = {
             BottomNavigationBar(navController)
         },
     ) { innerPadding ->
         Box(modifier = Modifier
-            .fillMaxSize()
             .fillMaxSize()
             .padding(innerPadding)
         ) {
@@ -44,8 +55,10 @@ fun FavoritesScreen(navController: NavController, postController: PostController
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = (-45).dp)
-                    .height(130.dp)
+                    .height(100.dp + statusBarHeight) // cộng thêm chiều cao status bar
+                    .graphicsLayer {
+                        translationY = -statusBarHeight.toPx() // kéo ngược lên
+                    }
             )
 
             Box(
@@ -58,9 +71,9 @@ fun FavoritesScreen(navController: NavController, postController: PostController
                     contentDescription = "Vivu Logo",
                     modifier = Modifier
                         .size(130.dp)
-                        .offset(y = (-35).dp)
+//                        .offset(y = (-35).dp)
                         .align(Alignment.TopStart)
-                        .padding(start = 20.dp)
+                        .padding(bottom = 35.dp)
                 )
 
                 Text(

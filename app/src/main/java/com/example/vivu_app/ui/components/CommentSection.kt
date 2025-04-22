@@ -62,11 +62,27 @@ fun CommentSection(postId: Int, postController: PostController) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp)
     ) {
+        Box(
+
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .width(300.dp)
+                .height(1.dp)
+                .background(Color.LightGray)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        // Ô nhập bình luận
+        CommentInputSection(postId = post.id, postController = viewModel())
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         // Tiêu đề phần bình luận
         Text(
             text = "COMMENT (${post.comments.size})",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.onSurfaceVariant, // Màu từ theme, thường là xám
             textAlign = TextAlign.Center
         )
 
@@ -87,8 +103,7 @@ fun CommentSection(postId: Int, postController: PostController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Ô nhập bình luận
-        CommentInputSection(postId = post.id, postController = viewModel())
+
     }
 }
 

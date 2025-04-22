@@ -21,5 +21,8 @@ data class Post(
     val contact: String, // Thông tin liên hệ (số điện thoại, email)
     var isFavorite: Boolean,  // Thêm trạng thái yêu thích
     val type: PostType, // Thêm loại bài viết
-    val comments: List<Comment> = mutableStateListOf()
+    val comments: List<Comment> = mutableStateListOf(),
+
+    // Nội dung chi tiết (nhiều ảnh + chữ đan xen)
+    val detailContents: List<PostContentItem> = emptyList()
 )

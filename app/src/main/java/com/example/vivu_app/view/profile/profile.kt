@@ -1,4 +1,4 @@
-package com.example.vivu_app.view.chat
+package com.example.vivu_app.view.profile
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun ChatScreen(navController: NavController) {
+fun ProfileScreen(navController: NavController) {
     val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     Scaffold(
         modifier = Modifier
@@ -35,9 +35,9 @@ fun ChatScreen(navController: NavController) {
                 BottomNavigationBar(navController)
             }
         },
-    ){ innerPadding ->
+    ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
-            Text("Màn hình Chat", modifier = Modifier.padding(16.dp))
+            Text("Màn hình Cá nhân", modifier = Modifier.padding(16.dp))
         }
     }
 }

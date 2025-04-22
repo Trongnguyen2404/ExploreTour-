@@ -2,10 +2,12 @@ package com.example.vivu_app.view.home
 
 import android.util.Log
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -21,6 +23,7 @@ import com.example.vivu_app.R
 import com.example.vivu_app.controller.PostController
 import com.example.vivu_app.model.Post
 import androidx.compose.ui.*
+import androidx.compose.ui.graphics.Brush
 
 
 @Composable
@@ -28,6 +31,7 @@ fun PostListScreen(navController: NavController, postController: PostController,
     val posts by postController.posts.collectAsState(initial = emptyList()) // Lấy dữ liệu mới
 
     Log.d("PostListScreen", "Received posts: $posts") // Kiểm tra dữ liệu
+
 
     LazyColumn {
         items(posts) { post ->
@@ -57,14 +61,40 @@ fun PostItem(
 
     // Kiểm tra nếu bài viết có trong danh sách yêu thích (isFavorite = true)
     val isFavorited = favoritePostsIds.contains(post.id)
+
+    var isClicked by remember { mutableStateOf(false) }
+
+    val cardBackgroundBrush = if (isClicked) {
+        Brush.horizontalGradient(
+            colors = listOf(
+                Color(0xFFEFB0C9), // màu hồng
+                Color(0xFFB9D6F3)  // màu xanh nhạt
+            )
+        )
+    } else {
+        Brush.verticalGradient(
+            colors = listOf(
+                Color(0xFFE4DEE1), // màu xám nhạt mặc định
+                Color(0xFFE4DEE1)
+            )
+        )
+    }
+
     Card(
         modifier = Modifier
             .width(450.dp)
             .height(170.dp)
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clickable { navController.navigate("postDetail/${post.title}") },
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = rememberRipple(color = Color(0xFFFFA726))
+            ) {
+                isClicked = !isClicked
+                navController.navigate("postDetail/${post.title}")
+            }
+            .background(brush = cardBackgroundBrush, shape = RoundedCornerShape(40.dp)),
         shape = RoundedCornerShape(40.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE4DEE1))
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Row(modifier = Modifier.padding(10.dp),
             verticalAlignment = Alignment.CenterVertically // thêm cái này!
@@ -118,7 +148,7 @@ fun PostItem(
 
             Column(modifier = Modifier
                 .weight(1f)
-                .fillMaxHeight(), // 👈 giúp Column luôn đầy chiều cao
+                .fillMaxHeight(), //  giúp Column luôn đầy chiều cao
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {

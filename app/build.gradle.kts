@@ -59,6 +59,9 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.protolite.well.known.types)
     implementation(libs.androidx.constraintlayout.core)
+    implementation(libs.androidx.storage)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.generativeai)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -76,7 +79,7 @@ dependencies {
 // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
-// Coil ( cái mới nhất)
+// Coil (cái mới nhất)
     implementation("io.coil-kt:coil-compose:2.5.0")
 
 // DataStore
@@ -85,5 +88,12 @@ dependencies {
 // JSON Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
+// Accompanist
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
+    implementation("com.google.accompanist:accompanist-insets:0.30.1")
+    implementation("com.google.accompanist:accompanist-insets-ui:0.30.1")
+
+// ConstraintLayout for Compose
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13")
 
 }

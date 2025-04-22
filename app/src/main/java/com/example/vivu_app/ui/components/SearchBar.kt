@@ -24,24 +24,45 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import com.example.vivu_app.R
 
+class SearchViewModel : ViewModel() {
 
+    var searchText by mutableStateOf("")
+        private set
+
+    private val _originalList = listOf("An", "Bình", "Cường", "Dũng", "Huy", "Hạnh")
+    var filteredList by mutableStateOf(_originalList)
+        private set
+
+    fun onSearchTextChange(newText: String) {
+        searchText = newText
+        filteredList = if (newText.isBlank()) {
+            _originalList
+        } else {
+            _originalList.filter {
+                it.contains(newText, ignoreCase = true)
+            }
+        }
+    }
+}
 @Composable
-fun SearchBar() {
-    var searchText by remember { mutableStateOf("") }
-
+fun SearchBar(
+    searchText: String,
+    onSearchTextChange: (String) -> Unit
+) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()  //  Chiếm toàn bộ chiều rộng có thể
-            .height(40.dp) //  Tăng chiều cao một chút
+            .fillMaxWidth()
+            .height(40.dp)
             .background(Color.White, shape = RoundedCornerShape(50))
             .border(2.dp, Color.Black, shape = RoundedCornerShape(50)),
         contentAlignment = Alignment.Center
     ) {
         BasicTextField(
             value = searchText,
-            onValueChange = { searchText = it },
+            onValueChange = onSearchTextChange,
             textStyle = TextStyle(
                 fontSize = 16.sp,
                 color = Color.Black,
@@ -50,7 +71,7 @@ fun SearchBar() {
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 20.dp, end = 50.dp, top = 8.dp, bottom = 8.dp) // Tăng padding bên trái
+                .padding(start = 20.dp, end = 50.dp, top = 8.dp, bottom = 8.dp)
         )
 
         if (searchText.isEmpty()) {
@@ -60,18 +81,18 @@ fun SearchBar() {
                 color = Color.Gray,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .padding(start = 20.dp) // Giữ text placeholder căn trái
+                    .padding(start = 20.dp)
             )
         }
 
         Icon(
             painter = painterResource(id = R.drawable.ic_search),
             contentDescription = "Search Icon",
-            tint = Color.Unspecified, // Giữ màu gốc của icon
+            tint = Color.Unspecified,
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .size(35.dp) // Tăng kích thước icon lớn hơn
-                .padding(end = 12.dp) // Tạo khoảng trống giữa icon và cạnh phải
+                .size(35.dp)
+                .padding(end = 12.dp)
         )
     }
 }

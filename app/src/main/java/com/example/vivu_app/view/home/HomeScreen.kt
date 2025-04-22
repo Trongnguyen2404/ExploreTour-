@@ -1,9 +1,15 @@
 package com.example.vivu_app.view.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+//import androidx.compose.foundation.layout.FlowColumnScopeInstance.weight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,59 +21,70 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.zIndex
 import com.example.vivu_app.controller.PostController
 import com.example.vivu_app.navigation.BottomNavigationBar
 import com.example.vivu_app.ui.components.CloudAnimationScreen
 import androidx.navigation.NavHostController
-
-
+import com.google.accompanist.insets.navigationBarsHeight
 
 
 @Composable
 fun HomeScreen(navController: NavHostController, postController: PostController) {
-    var selectedCategory by remember { mutableStateOf("tour") }
+    var selectedCategory by remember { mutableStateOf("location") }
 
+    val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+    val postsFromController by postController.posts.collectAsState()
     LaunchedEffect(Unit) {
-        postController.setCategory("tour")
+        postController.setCategory(selectedCategory)
     }
+
 
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            // Thêm padding theo insets hệ thống
-            .windowInsetsPadding(WindowInsets.safeDrawing),
+            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)),
+        containerColor = Color.Transparent,
+        contentWindowInsets = WindowInsets.systemBars, // Không chịu ảnh hưởng bàn phím
         bottomBar = {
-            BottomNavigationBar(navController)
+            if (!imeVisible) {
+                BottomNavigationBar(navController,)
+            }
         },
-        contentWindowInsets = WindowInsets.systemBars
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .windowInsetsPadding(WindowInsets.safeDrawing) // tránh bị che bởi status/nav bar
-//                .imePadding() // tự động chừa chỗ cho bàn phím
         ) {
             CloudAnimationScreen(
                 modifier = Modifier
-                    .offset(y = (-50).dp)
+//                    .offset(y = (-50).dp)
+                    .graphicsLayer {
+                        translationY = -110.dp.toPx() // tương đương offset
+                    }
                     .fillMaxSize()
-                    .zIndex(0f)
+                    .zIndex(1f),
+
             )
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 105.dp)
-                    .zIndex(1f),
+                    .padding(top = 60.dp)
+                    .zIndex(2f),
                 contentAlignment = Alignment.TopCenter
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(15.dp, alignment = Alignment.CenterHorizontally)
                 ) {
+
                     CustomCategoryButton(
                         text = "TOUR",
                         isSelected = selectedCategory == "tour",
@@ -92,9 +109,10 @@ fun HomeScreen(navController: NavHostController, postController: PostController)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 150.dp)
-                    .zIndex(2f)
+                    .padding(top = 90.dp)
+                    .zIndex(0f)
             ) {
+                //Spacer(modifier = Modifier.height(80.dp))
                 PostListScreen(navController, postController)
             }
         }

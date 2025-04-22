@@ -24,7 +24,11 @@ import com.example.vivu_app.R
 
 
 @Composable
-fun TopHeader(modifier: Modifier = Modifier) {
+fun TopHeader(
+    modifier: Modifier = Modifier,
+    searchText: String,
+    onSearchTextChange: (String) -> Unit
+) {
     Row(
         modifier = modifier
             .padding(top = 15.dp)
@@ -37,11 +41,12 @@ fun TopHeader(modifier: Modifier = Modifier) {
             contentDescription = "VIVU Logo",
             modifier = Modifier
                 .size(130.dp)
-                .height(40.dp) // Giới hạn rõ chiều cao
-                .padding(bottom = 20.dp) // Như hiệu ứng xích lên
-//                .offset(y = (-20).dp),
+                .height(40.dp)
+                .padding(bottom = 20.dp)
         )
-        Spacer(modifier = Modifier.height(5.dp)) // Tạo khoảng cách nhỏ phía dưới
+
+        Spacer(modifier = Modifier.height(5.dp))
+
         Column(horizontalAlignment = Alignment.End) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -60,8 +65,14 @@ fun TopHeader(modifier: Modifier = Modifier) {
                         .clip(CircleShape)
                 )
             }
+
             Spacer(modifier = Modifier.height(10.dp))
-            SearchBar()
+
+            // ✅ Gọi SearchBar tại đây với props
+            SearchBar(
+                searchText = searchText,
+                onSearchTextChange = onSearchTextChange
+            )
         }
     }
 }

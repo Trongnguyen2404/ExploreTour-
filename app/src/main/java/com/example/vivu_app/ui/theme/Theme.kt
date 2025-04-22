@@ -1,15 +1,46 @@
 package com.example.vivu_app.ui.theme
-
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+
+@Composable
+fun YourAppTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = if (darkTheme) {
+        darkColorScheme(
+            primary = Color(0xFFA1C9F1),
+            onPrimary = Color.Black,
+            surface = Color(0xFFE3E3E3),
+            onSurface = Color.Black // Đảm bảo màu chữ trên bề mặt là đen
+        )
+    } else {
+        lightColorScheme(
+            primary = Color(0xFFA1C9F1),
+            onPrimary = Color.Black,
+            surface = Color(0xFFE3E3E3),
+            onSurface = Color.Black // Đảm bảo màu chữ trên bề mặt là đen
+        )
+    }
+
+    MaterialTheme(
+        colorScheme = colors,
+
+        content = content
+    )
+}
+
+
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -34,7 +65,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun VIVU_AppTheme(
+fun OnboardingScreenTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
