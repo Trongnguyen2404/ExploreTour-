@@ -70,7 +70,7 @@ fun AppNavigation(
         val viewModel: SearchViewModel = viewModel()
         val searchText = viewModel.searchText
 
-        if (currentDestination != "favorites") {
+        if (currentDestination == "home" || currentDestination?.startsWith("postDetail") == true) {
             TopHeader(
                 modifier = Modifier
                     .fillMaxWidth()

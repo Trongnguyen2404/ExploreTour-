@@ -46,13 +46,21 @@ fun HomeScreen(navController: NavHostController, postController: PostController)
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)),
+            .fillMaxSize(),
+            //.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)),
         containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets.systemBars, // Không chịu ảnh hưởng bàn phím
+
         bottomBar = {
-            if (!imeVisible) {
-                BottomNavigationBar(navController,)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFF1E8D9))
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+            ){
+                if (!imeVisible) {
+                    BottomNavigationBar(navController,)
+                }
             }
         },
     ) { innerPadding ->
@@ -60,7 +68,8 @@ fun HomeScreen(navController: NavHostController, postController: PostController)
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .windowInsetsPadding(WindowInsets.safeDrawing) // tránh bị che bởi status/nav bar
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+// tránh bị che bởi status/nav bar
         ) {
             CloudAnimationScreen(
                 modifier = Modifier

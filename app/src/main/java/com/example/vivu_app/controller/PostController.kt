@@ -3,17 +3,16 @@ package com.example.vivu_app.controller
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.vivu_app.model.Post
+import com.example.vivu_app.model.PostType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import com.example.vivu_app.R
 import com.example.vivu_app.model.Comment
-import com.example.vivu_app.model.Post
-import com.example.vivu_app.model.PostType
 import com.example.vivu_app.data.local.PreferencesManager
 import com.example.vivu_app.model.PostContentItem
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -234,9 +233,8 @@ class PostController(private val preferencesManager: PreferencesManager) : ViewM
     """.trimIndent(),
                     imageRes = R.drawable.nha_trang,
                     rating = 4.5, duration = "4N3Đ",
-                    departureDate = "03/04/2024",
-                    remainingSeats = 20, isFavorite = false,
-                    tourCode = "FG2044", contact = "0346019375",
+                    isFavorite = false,
+                    description = "Kinh nghiệm du lịch Vũng Tàu: Ăn gì? Chơi gì? Ở đâu?",
                     type = PostType.LOCATION,
                     comments = mutableStateListOf()
                 ),

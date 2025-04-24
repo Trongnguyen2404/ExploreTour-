@@ -35,6 +35,7 @@ class MainActivity : ComponentActivity() {
             PostControllerFactory(preferencesManager)
         )[PostController::class.java]
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
 
         setContent {

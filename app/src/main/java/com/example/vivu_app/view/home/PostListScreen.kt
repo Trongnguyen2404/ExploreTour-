@@ -24,6 +24,8 @@ import com.example.vivu_app.controller.PostController
 import com.example.vivu_app.model.Post
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.style.TextOverflow
+import com.example.vivu_app.model.PostType
 
 
 @Composable
@@ -47,15 +49,13 @@ fun PostListScreen(navController: NavController, postController: PostController,
     }
 }
 
-
 @Composable
 fun PostItem(
     post: Post,
     navController: NavController,
-    postController: PostController,
+    postController: PostController, // Giữ lại nếu cần cho favorite hoặc logic khác
     onFavoriteClick: () -> Unit
-)
-{
+) {
     // Lấy danh sách bài viết yêu thích từ ViewModel
     val favoritePostsIds by postController.favoritePostIds.collectAsState()
 
@@ -95,43 +95,46 @@ fun PostItem(
             .background(brush = cardBackgroundBrush, shape = RoundedCornerShape(40.dp)),
         shape = RoundedCornerShape(40.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-    ) {
-        Row(modifier = Modifier.padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically // thêm cái này!
+    ){
+        Row(
+            modifier = Modifier.padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            //ảnh v rating nằm chung
+            // --- Phần Ảnh và Rating (Giữ nguyên cấu trúc Box) ---
             Box(
                 modifier = Modifier
-                    .width(155.dp)
-                    .fillMaxHeight() // thêm cái này cho khớp chiều cao cha
-                    .clip(RoundedCornerShape(16.dp))
+                    .width(155.dp) // Điều chỉnh chiều rộng ảnh nếu cần
+                    .fillMaxHeight()// Điều chỉnh chiều cao ảnh nếu cần (hoặc fillMaxHeight nếu muốn bằng Card)
+                    .clip(RoundedCornerShape(16.dp)) // Bo góc ảnh nhỏ hơn
             ) {
                 Image(
                     painter = painterResource(id = post.imageRes),
-                    contentDescription = null,
+                    contentDescription = post.title, // Mô tả ảnh tốt hơn
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.matchParentSize()
                 )
-                // Rating
+                // Rating Box
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .padding(6.dp)
-                        .width(70.dp)
+                        // .width(70.dp) // Để tự động co giãn theo nội dung
+                        .wrapContentWidth()
                         .height(20.dp)
-                        .background(Color(0xFFF1E8D9), RoundedCornerShape(50.dp)),
+                        .background(Color(0xFFF1E8D9), RoundedCornerShape(50.dp))
+                        .padding(horizontal = 8.dp), // Thêm padding ngang cho text bên trong
                     contentAlignment = Alignment.Center
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxSize()
+                        // horizontalArrangement = Arrangement.Center, // Không cần vì đã wrap content
+                        // modifier = Modifier.fillMaxSize() // Không cần fill size
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_star),
                             contentDescription = null,
-                            tint = Color.Unspecified,
-                            modifier = Modifier.size(20.dp)
+                            tint = Color.Unspecified, // Giữ màu gốc của icon
+                            modifier = Modifier.size(16.dp) // Kích thước icon nhỏ hơn
                         )
                         Spacer(modifier = Modifier.width(3.dp))
                         Text(
@@ -142,21 +145,56 @@ fun PostItem(
                         )
                     }
                 }
+                // Optional: Thêm Text Overlay cho Location như "DU LỊCH VŨNG TÀU"
+                // if (post.type == PostType.LOCATION) { ... }
             }
 
-            Spacer(modifier = Modifier.width(5.dp))
+            Spacer(modifier = Modifier.width(5.dp)) // Tăng khoảng cách
 
-            Column(modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(), //  giúp Column luôn đầy chiều cao
+            // --- Phần Nội dung Text (Conditional) ---
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(), //  giúp Column luôn đầy chiều cao
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {
-//                Spacer(modifier = Modifier.height(25.dp))
-                InfoRow(icon = R.drawable.ic_location, text = post.title)
-                InfoRow(icon = R.drawable.ic_time, text = "Lịch trình: ${post.duration}")
-                InfoRow(icon = R.drawable.ic_calendar, text = "Khởi hành: ${post.departureDate}")
-                InfoRow(icon = R.drawable.ic_seat, text = "Số chỗ còn nhận: ${post.remainingSeats}")
+                when (post.type) {
+                    PostType.TOUR -> {
+                        // Hiển thị các InfoRow
+                        InfoRow(icon = R.drawable.ic_location, text = post.title)
+                        Spacer(modifier = Modifier.height(2.dp))
+                        InfoRow(icon = R.drawable.ic_time, text = "Lịch trình: ${post.duration}")
+                        Spacer(modifier = Modifier.height(2.dp))
+                        InfoRow(icon = R.drawable.ic_calendar, text = "Khởi hành: ${post.departureDate}")
+                        Spacer(modifier = Modifier.height(2.dp))
+                        InfoRow(icon = R.drawable.ic_seat, text = "Số chỗ còn nhận: ${post.remainingSeats}")
+                    }
+                    PostType.LOCATION -> {
+                        // Hiển thị Title (có thể là tên địa điểm ngắn gọn)
+                        // Hiển thị Description (nội dung dài)
+                        post.description?.takeIf { it.isNotBlank() }?.let {
+                            Text(
+                                text = it, // Ví dụ: "Kinh nghiệm du lịch Vũng Tàu: Ăn gì? Chơi gì? Ở đâu?"
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color.Black,
+                                maxLines = 4, // Giới hạn số dòng mô tả
+                                overflow = TextOverflow.Ellipsis,
+                                lineHeight = 18.sp // Điều chỉnh khoảng cách dòng nếu cần
+                            )
+                        }
+                    }
+                    else -> { // Trường hợp không xác định
+                        Text(
+                            text = post.title,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                        Text("Loại bài viết không xác định", color = Color.Red)
+                    }
+                }
             }
 
             // Nút yêu thích
