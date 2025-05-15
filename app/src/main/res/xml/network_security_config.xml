@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- Cho phép HTTP đến địa chỉ IP cụ thể của backend -->
+        <domain includeSubdomains="false">192.168.102.6</domain>
+        <!-- Bạn cũng có thể cần thêm 'localhost' hoặc '10.0.2.2' nếu chạy emulator -->
+        <!-- <domain includeSubdomains="false">10.0.2.2</domain> -->
+    </domain-config>
+    <!-- Giữ cấu hình mặc định cho các domain khác (nên là HTTPS) -->
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>
